@@ -23,6 +23,8 @@ await desktop.screenshot({ path: 'artifacts/full-desktop.png', fullPage: true })
 await desktop.locator('#work').screenshot({ path: 'artifacts/skysprout-desktop.png' })
 await desktop.locator('#iahbrary').screenshot({ path: 'artifacts/iahbrary-desktop.png' })
 await desktop.locator('#other-work').screenshot({ path: 'artifacts/other-work-desktop.png' })
+await desktop.locator('#about').screenshot({ path: 'artifacts/about-desktop.png' })
+await desktop.locator('#contact').screenshot({ path: 'artifacts/contact-desktop.png' })
 await desktop.locator('#work').scrollIntoViewIfNeeded()
 await desktop.evaluate(() => {
   if (document.activeElement instanceof HTMLElement) document.activeElement.blur()
@@ -55,6 +57,8 @@ await mobile.screenshot({ path: 'artifacts/full-mobile.png', fullPage: true })
 await mobile.locator('#work').screenshot({ path: 'artifacts/skysprout-mobile.png' })
 await mobile.locator('#iahbrary').screenshot({ path: 'artifacts/iahbrary-mobile.png' })
 await mobile.locator('#other-work').screenshot({ path: 'artifacts/other-work-mobile.png' })
+await mobile.locator('#about').screenshot({ path: 'artifacts/about-mobile.png' })
+await mobile.locator('#contact').screenshot({ path: 'artifacts/contact-mobile.png' })
 
 const mobileInfo = await mobile.evaluate(() => ({
   canvas: Boolean(document.querySelector('canvas')),

@@ -1,0 +1,69 @@
+.section {
+  padding-block: var(--section-space);
+  background: var(--surface);
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  align-items: end;
+  gap: clamp(2rem, 6vw, 6rem);
+}
+
+.inner h2 {
+  font-size: clamp(3rem, 6vw, 6rem);
+  line-height: 0.9;
+}
+
+.lead {
+  max-width: 32ch;
+  margin-top: 1rem;
+  color: var(--muted);
+}
+
+.links {
+  display: grid;
+  justify-items: start;
+  gap: 1.1rem;
+}
+
+.email {
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 4vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.email:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 0.06em;
+  text-underline-offset: 0.18em;
+}
+
+.github {
+  color: var(--ink);
+  font-size: var(--step-small);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.location {
+  color: var(--muted);
+  font-size: var(--step-small);
+}
+
+@media (max-width: 900px) {
+  .inner {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 2rem;
+  }
+
+  .email {
+    font-size: clamp(1.35rem, 7vw, 2.4rem);
+  }
+}
