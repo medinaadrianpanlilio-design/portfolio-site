@@ -38,6 +38,12 @@ export type Measurement = {
   body: string
 }
 
+export type WeatherEvent = {
+  name: string
+  mutation: string
+  multiplier: string
+}
+
 export type OtherWorkItem = {
   name: string
   tagline: string

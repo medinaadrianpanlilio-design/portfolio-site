@@ -4,6 +4,7 @@ import type {
   LoopStep,
   Measurement,
   RetentionPanel,
+  WeatherEvent,
 } from './types'
 
 export const skySprout = {
@@ -37,6 +38,13 @@ export const skySprout = {
       detail: 'Passive income funds more plots, trees, and pedestals.',
     },
   ] satisfies LoopStep[],
+  tutorialSteps: ['Buy', 'Plant', 'Harvest', 'Sell', 'Exhibit'],
+  weatherEvents: [
+    { name: 'Snow & Wind', mutation: 'Wind', multiplier: '1.5×' },
+    { name: 'Lightning Storm', mutation: 'Thunder', multiplier: '3×' },
+    { name: 'Cosmic Surge', mutation: 'Cosmic', multiplier: '8×' },
+  ] satisfies WeatherEvent[],
+  goldenMutation: 'Golden 2×',
   retention: [
     {
       id: 'tutorial',

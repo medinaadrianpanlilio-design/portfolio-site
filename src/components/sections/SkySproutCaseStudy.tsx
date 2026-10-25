@@ -1,6 +1,9 @@
 import { skySprout } from '../../content/skysprout'
 import { ArrowLink } from '../ui/ArrowLink'
+import { EngineeringNotes } from '../skysprout/EngineeringNotes'
 import { LoopDiagram } from '../skysprout/LoopDiagram'
+import { MeasurementPlan } from '../skysprout/MeasurementPlan'
+import { RetentionPanels } from '../skysprout/RetentionPanels'
 import styles from './SkySproutCaseStudy.module.css'
 
 export function SkySproutCaseStudy() {
@@ -64,6 +67,14 @@ export function SkySproutCaseStudy() {
 
       <div className={`page ${styles.body}`}>
         <LoopDiagram steps={skySprout.loop} />
+        <RetentionPanels
+          panels={skySprout.retention}
+          tutorialSteps={skySprout.tutorialSteps}
+          weatherEvents={skySprout.weatherEvents}
+          goldenMutation={skySprout.goldenMutation}
+        />
+        <EngineeringNotes notes={skySprout.engineering} />
+        <MeasurementPlan metrics={skySprout.measurements} />
       </div>
     </section>
   )

@@ -1,0 +1,53 @@
+.block {
+  margin-top: clamp(4rem, 8vw, 7rem);
+  padding: clamp(1.5rem, 3vw, 2.4rem);
+  background: var(--surface);
+}
+
+.heading {
+  font-size: clamp(2rem, 3.5vw, 3.2rem);
+}
+
+.statement {
+  max-width: 52ch;
+  margin-top: 0.9rem;
+  color: var(--muted);
+}
+
+.statement strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.6rem 3rem;
+  margin-top: clamp(1.8rem, 3vw, 2.5rem);
+}
+
+.metric {
+  display: grid;
+  gap: 0.35rem;
+  align-content: start;
+}
+
+.metric dt {
+  color: var(--ink);
+  font-size: var(--step-small);
+  font-weight: 750;
+}
+
+.metric dd {
+  max-width: 42ch;
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--step-small);
+  line-height: 1.45;
+}
+
+@media (max-width: 700px) {
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+}
