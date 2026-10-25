@@ -1,0 +1,47 @@
+:root {
+  color-scheme: dark;
+
+  /* Stage */
+  --bg: #071a14;
+  --bg-deep: #04110d;
+  --surface: #0e2a20;
+  --surface-raised: #13382b;
+
+  /* Ink */
+  --ink: #f4ebdd;
+  --muted: #a9b8ad;
+
+  /* Action */
+  --accent: #e8b45a;
+  --accent-ink: #1a130a;
+
+  /* Content accents, used only inside the project that owns them */
+  --leaf: #7fd37f;
+  --sky: #7ed0f0;
+  --berry: #e86aa6;
+  --mint: #b9e6d0;
+  --healthya: #b69cff;
+
+  /* Type */
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-text: 'Manrope Variable', Manrope, system-ui, sans-serif;
+
+  --step-small: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
+  --step-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  --step-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+  --step-head: clamp(2rem, 1.3rem + 3.2vw, 4rem);
+  --step-display: clamp(3.5rem, 1rem + 9vw, 9rem);
+
+  /* Space and measure */
+  --measure: 62ch;
+  --page-gutter: clamp(1.25rem, 4vw, 4.5rem);
+  --section-space: clamp(5rem, 10vw, 9rem);
+  --max-width: 90rem;
+  --header-height: 4.5rem;
+
+  /* Shape */
+  --radius: 0;
+  --phone-radius: 2.5rem;
+
+  --motion: 220ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
