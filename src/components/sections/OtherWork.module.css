@@ -1,0 +1,171 @@
+.section {
+  padding-block: var(--section-space);
+}
+
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.5fr);
+  align-items: end;
+  gap: 1.5rem 3rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.lead {
+  max-width: 34ch;
+  color: var(--muted);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 1.25rem;
+  align-items: stretch;
+}
+
+.healthya {
+  display: grid;
+  grid-column: span 7;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+  background: var(--surface);
+  border-left: 4px solid var(--healthya);
+}
+
+.healthyaCopy {
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+}
+
+.kicker {
+  color: var(--muted);
+  font-size: var(--step-small);
+  font-weight: 650;
+}
+
+.title {
+  font-size: clamp(2.2rem, 3.4vw, 3.4rem);
+  line-height: 0.9;
+}
+
+.tagline {
+  max-width: 25ch;
+  font-family: var(--font-display);
+  font-size: var(--step-lead);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.body {
+  max-width: 44ch;
+  color: var(--muted);
+  font-size: var(--step-small);
+  line-height: 1.5;
+}
+
+.role {
+  color: var(--ink);
+  font-size: var(--step-small);
+  line-height: 1.4;
+}
+
+.healthyaMedia {
+  margin: 0;
+  padding: 0.45rem;
+  background: var(--bg-deep);
+}
+
+.healthyaMedia img {
+  width: 100%;
+  height: auto;
+}
+
+.healthyaMedia figcaption {
+  margin-top: 0.55rem;
+  color: var(--muted);
+  font-size: var(--step-small);
+  line-height: 1.4;
+}
+
+.magilas {
+  display: grid;
+  grid-column: span 5;
+  align-content: start;
+  gap: 0.9rem;
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+  background: var(--surface-raised);
+  border-left: 4px solid var(--accent);
+}
+
+.gymMark {
+  display: grid;
+  gap: 0;
+  font-family: var(--font-display);
+  font-size: clamp(3.3rem, 5vw, 5.2rem);
+  line-height: 0.78;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+.gymMark span:last-child {
+  color: var(--accent);
+}
+
+.magilas .tagline {
+  max-width: 24ch;
+}
+
+.magilas .body {
+  max-width: 42ch;
+}
+
+.note {
+  max-width: 42ch;
+  padding-top: 0.15rem;
+  color: var(--muted);
+  font-size: var(--step-small);
+  line-height: 1.45;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.2rem;
+  margin-top: 0.35rem;
+}
+
+.secondary {
+  color: var(--muted);
+  font-size: var(--step-small);
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.secondary:hover {
+  color: var(--ink);
+}
+
+@media (max-width: 1000px) {
+  .healthya,
+  .magilas {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 800px) {
+  .header {
+    grid-template-columns: 1fr;
+  }
+
+  .healthya {
+    grid-template-columns: 1fr;
+  }
+
+  .gymMark {
+    font-size: clamp(3rem, 14vw, 4.8rem);
+  }
+}

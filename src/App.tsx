@@ -2,6 +2,7 @@ import { Footer } from './components/layout/Footer'
 import { Header } from './components/layout/Header'
 import { Hero } from './components/hero/Hero'
 import { IahbraryCaseStudy } from './components/sections/IahbraryCaseStudy'
+import { OtherWork } from './components/sections/OtherWork'
 import { SkySproutCaseStudy } from './components/sections/SkySproutCaseStudy'
 import { SkipLink } from './components/ui/SkipLink'
 
@@ -37,11 +38,8 @@ function App() {
 
         <IahbraryCaseStudy />
 
-        <PlaceholderSection
-          id="other-work"
-          title="More work"
-          body="HealthyaSat and Magilas Gym."
-        />
+        <OtherWork />
+
         <PlaceholderSection
           id="about"
           title="About"
