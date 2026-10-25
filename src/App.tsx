@@ -1,6 +1,7 @@
 import { Footer } from './components/layout/Footer'
 import { Header } from './components/layout/Header'
 import { Hero } from './components/hero/Hero'
+import { IahbraryCaseStudy } from './components/sections/IahbraryCaseStudy'
 import { SkySproutCaseStudy } from './components/sections/SkySproutCaseStudy'
 import { SkipLink } from './components/ui/SkipLink'
 
@@ -34,11 +35,8 @@ function App() {
 
         <SkySproutCaseStudy />
 
-        <PlaceholderSection
-          id="iahbrary"
-          title="Iahbrary"
-          body="A reading tracker that treats reading like training."
-        />
+        <IahbraryCaseStudy />
+
         <PlaceholderSection
           id="other-work"
           title="More work"

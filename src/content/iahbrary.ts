@@ -9,7 +9,7 @@ export const iahbrary = {
     'An offline queue keeps a reading session safe when the network drops.',
   ],
   repoUrl: 'https://github.com/medinaadrianpanlilio-design/iahbrary',
-  image: '/images/iahbrary-home.webp',
+  image: '/images/iahbrary-home-720.webp',
   imageAlt:
     'Iahbrary reading screen showing The Way of Kings, 19 sessions, and a start button.',
 } as const

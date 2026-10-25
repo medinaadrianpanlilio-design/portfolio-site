@@ -1,0 +1,136 @@
+.section {
+  padding-block: var(--section-space);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: clamp(2.5rem, 7vw, 7rem);
+}
+
+.text {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.kicker {
+  color: var(--muted);
+  font-size: var(--step-small);
+  font-weight: 650;
+}
+
+.title {
+  margin-top: 0.45rem;
+  font-size: clamp(3rem, 5.5vw, 5.8rem);
+  line-height: 0.9;
+}
+
+.tagline {
+  max-width: 22ch;
+  margin-top: 0.8rem;
+  font-family: var(--font-display);
+  font-size: var(--step-lead);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.description {
+  max-width: 54ch;
+  margin-top: 1.4rem;
+  color: var(--muted);
+}
+
+.notes {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 1.8rem;
+  padding-left: 1.2rem;
+  border-left: 4px solid var(--accent);
+}
+
+.note {
+  max-width: 52ch;
+  color: var(--muted);
+  font-size: var(--step-small);
+  line-height: 1.5;
+}
+
+.action {
+  margin-top: 1.8rem;
+}
+
+.visual {
+  display: grid;
+  grid-column: 1;
+  grid-row: 1;
+  justify-items: center;
+  gap: 1rem;
+}
+
+.phonePanel {
+  position: relative;
+  width: min(100%, 20rem);
+}
+
+.phonePanel::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  inset: 0.9rem -0.9rem -0.9rem 0.9rem;
+  background: var(--mint);
+}
+
+.phone {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 0.55rem;
+  overflow: hidden;
+  border-radius: var(--phone-radius);
+  background: var(--bg-deep);
+  transform: rotate(-2.5deg);
+}
+
+.phone img {
+  width: 100%;
+  height: auto;
+  border-radius: calc(var(--phone-radius) - 0.3rem);
+}
+
+.visualCaption {
+  max-width: 34ch;
+  color: var(--muted);
+  font-size: var(--step-small);
+  line-height: 1.45;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .text,
+  .visual {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .text {
+    order: 1;
+  }
+
+  .visual {
+    order: 2;
+  }
+
+  .title {
+    font-size: clamp(3rem, 14vw, 4.6rem);
+  }
+
+  .phonePanel {
+    width: min(76vw, 20rem);
+  }
+}

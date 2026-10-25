@@ -21,11 +21,17 @@ await desktop.waitForTimeout(2500)
 await desktop.screenshot({ path: 'artifacts/hero-desktop.png' })
 await desktop.screenshot({ path: 'artifacts/full-desktop.png', fullPage: true })
 await desktop.locator('#work').screenshot({ path: 'artifacts/skysprout-desktop.png' })
+await desktop.locator('#iahbrary').screenshot({ path: 'artifacts/iahbrary-desktop.png' })
 await desktop.locator('#work').scrollIntoViewIfNeeded()
 await desktop.evaluate(() => {
   if (document.activeElement instanceof HTMLElement) document.activeElement.blur()
 })
 await desktop.screenshot({ path: 'artifacts/work-viewport.png' })
+await desktop.locator('#iahbrary').scrollIntoViewIfNeeded()
+await desktop.evaluate(() => {
+  if (document.activeElement instanceof HTMLElement) document.activeElement.blur()
+})
+await desktop.screenshot({ path: 'artifacts/iahbrary-viewport.png' })
 
 const desktopInfo = await desktop.evaluate(() => ({
   title: document.title,
@@ -46,6 +52,7 @@ await mobile.waitForTimeout(1000)
 await mobile.screenshot({ path: 'artifacts/hero-mobile.png' })
 await mobile.screenshot({ path: 'artifacts/full-mobile.png', fullPage: true })
 await mobile.locator('#work').screenshot({ path: 'artifacts/skysprout-mobile.png' })
+await mobile.locator('#iahbrary').screenshot({ path: 'artifacts/iahbrary-mobile.png' })
 
 const mobileInfo = await mobile.evaluate(() => ({
   canvas: Boolean(document.querySelector('canvas')),
