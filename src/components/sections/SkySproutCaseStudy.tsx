@@ -1,3 +1,6 @@
+import { useRef } from 'react'
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
+
 import { skySprout } from '../../content/skysprout'
 import { ArrowLink } from '../ui/ArrowLink'
 import { EngineeringNotes } from '../skysprout/EngineeringNotes'
@@ -7,8 +10,17 @@ import { RetentionPanels } from '../skysprout/RetentionPanels'
 import styles from './SkySproutCaseStudy.module.css'
 
 export function SkySproutCaseStudy() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const reduceMotion = useReducedMotion()
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  })
+  const mediaY = useTransform(scrollYProgress, [0, 1], [-12, 12])
+
   return (
     <section
+      ref={sectionRef}
       id="work"
       className={styles.section}
       aria-labelledby="skysprout-title"
@@ -46,7 +58,10 @@ export function SkySproutCaseStudy() {
         </div>
       </div>
 
-      <figure className={styles.media}>
+      <motion.figure
+        className={styles.media}
+        style={reduceMotion ? undefined : { y: mediaY }}
+      >
         <img
           src="/images/skysprout-garden-1600.webp"
           srcSet="/images/skysprout-garden-800.webp 800w, /images/skysprout-garden-1600.webp 1600w"
@@ -63,7 +78,7 @@ export function SkySproutCaseStudy() {
             Frost Wind event.
           </span>
         </figcaption>
-      </figure>
+      </motion.figure>
 
       <div className={`page ${styles.body}`}>
         <LoopDiagram steps={skySprout.loop} />

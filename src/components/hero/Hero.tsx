@@ -1,5 +1,10 @@
 import { useRef } from 'react'
-import { useScroll } from 'framer-motion'
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from 'framer-motion'
 
 import { site } from '../../content/site'
 import { ArrowLink } from '../ui/ArrowLink'
@@ -8,10 +13,12 @@ import styles from './Hero.module.css'
 
 export function Hero() {
   const heroRef = useRef<HTMLElement>(null)
+  const reduceMotion = useReducedMotion()
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ['start start', 'end start'],
   })
+  const copyY = useTransform(scrollYProgress, [0, 1], [0, -48])
 
   return (
     <section
@@ -20,8 +27,10 @@ export function Hero() {
       aria-labelledby="hero-title"
     >
       <div className={`page ${styles.inner}`}>
-        <div className={styles.copy}>
-          <p className={styles.kicker}>{site.fullName}</p>
+        <motion.div
+          className={styles.copy}
+          style={reduceMotion ? undefined : { y: copyY }}
+        >
           <h1 id="hero-title">Adrian Medina</h1>
           <p className={styles.lead}>I build systems that feel alive.</p>
           <p className={styles.support}>
@@ -34,7 +43,7 @@ export function Hero() {
             </ArrowLink>
             <ArrowLink href="#work">See the work</ArrowLink>
           </div>
-        </div>
+        </motion.div>
 
         <div className={styles.stage}>
           <IslandStage scrollProgress={scrollYProgress} />

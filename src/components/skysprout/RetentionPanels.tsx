@@ -64,13 +64,13 @@ export function RetentionPanels({
           data-testid="retention-panel"
           data-variant="offline"
         >
-          <div className={styles.offlineTop}>
-            <span className={styles.stat}>{offline.stat}</span>
-            <span className={styles.statLabel}>{offline.statLabel}</span>
-          </div>
           <div className={styles.panelCopy}>
             <h4 className={styles.title}>{offline.title}</h4>
             <p className={styles.body}>{offline.body}</p>
+          </div>
+          <div className={styles.offlineTop}>
+            <span className={styles.stat}>{offline.stat}</span>
+            <span className={styles.statLabel}>{offline.statLabel}</span>
           </div>
           <div className={styles.offlineArt} aria-hidden="true">
             <img
@@ -106,15 +106,18 @@ export function RetentionPanels({
               {weatherEvents.map((event) => (
                 <div className={styles.event} key={event.name}>
                   <span className={styles.eventBar} aria-hidden="true" />
-                  <span className={styles.eventName}>{event.name}</span>
-                  <span className={styles.mutation}>{event.mutation}</span>
                   <span className={styles.multiplier}>{event.multiplier}</span>
+                  <p className={styles.eventCopy}>
+                    {event.name}: the {event.mutation} mutation.
+                  </p>
                 </div>
               ))}
               <div className={styles.golden}>
                 <span className={styles.eventBar} aria-hidden="true" />
-                <span className={styles.eventName}>Baseline</span>
-                <span className={styles.mutation}>{goldenMutation}</span>
+                <span className={styles.multiplier}>2×</span>
+                <p className={styles.eventCopy}>
+                  {goldenMutation} mutation, baseline.
+                </p>
               </div>
             </div>
             <p className={styles.cycleNote}>

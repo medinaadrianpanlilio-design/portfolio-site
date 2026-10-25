@@ -24,7 +24,6 @@ export function OtherWork() {
       <div className={`page ${styles.grid}`}>
         <article className={styles.healthya}>
           <div className={styles.healthyaCopy}>
-            <p className={styles.kicker}>Browser extension</p>
             <h3 className={styles.title}>HealthyaSat</h3>
             <p className={styles.tagline}>{healthyaSat.tagline}</p>
             <p className={styles.body}>{healthyaSat.body}</p>

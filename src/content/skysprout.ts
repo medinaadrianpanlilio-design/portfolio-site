@@ -44,7 +44,7 @@ export const skySprout = {
     { name: 'Lightning Storm', mutation: 'Thunder', multiplier: '3×' },
     { name: 'Cosmic Surge', mutation: 'Cosmic', multiplier: '8×' },
   ] satisfies WeatherEvent[],
-  goldenMutation: 'Golden 2×',
+  goldenMutation: 'Golden',
   retention: [
     {
       id: 'tutorial',

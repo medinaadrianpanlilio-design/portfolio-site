@@ -39,14 +39,8 @@
   gap: 0.75rem;
 }
 
-.kicker {
-  color: var(--muted);
-  font-size: var(--step-small);
-  font-weight: 650;
-}
-
 .title {
-  font-size: clamp(2.2rem, 3.4vw, 3.4rem);
+  font-size: var(--step-subhead);
   line-height: 0.9;
 }
 
@@ -103,7 +97,7 @@
   display: grid;
   gap: 0;
   font-family: var(--font-display);
-  font-size: clamp(3.3rem, 5vw, 5.2rem);
+  font-size: var(--step-head);
   line-height: 0.78;
   letter-spacing: -0.05em;
   text-transform: uppercase;
@@ -166,6 +160,6 @@
   }
 
   .gymMark {
-    font-size: clamp(3rem, 14vw, 4.8rem);
+    font-size: var(--step-stat);
   }
 }

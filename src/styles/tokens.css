@@ -26,10 +26,12 @@
   --font-display: 'Instrument Serif', Georgia, serif;
   --font-text: 'Manrope Variable', Manrope, system-ui, sans-serif;
 
-  --step-small: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
-  --step-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  --step-small: clamp(1rem, 0.97rem + 0.1vw, 1.0625rem);
+  --step-body: clamp(1.125rem, 1.05rem + 0.3vw, 1.25rem);
   --step-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+  --step-subhead: clamp(1.5rem, 1.2rem + 1.3vw, 2rem);
   --step-head: clamp(2rem, 1.3rem + 3.2vw, 4rem);
+  --step-stat: clamp(2.5rem, 2rem + 1.4vw, 3rem);
   --step-display: clamp(3.5rem, 1rem + 9vw, 9rem);
 
   /* Space and measure */

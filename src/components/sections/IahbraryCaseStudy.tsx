@@ -11,7 +11,6 @@ export function IahbraryCaseStudy() {
     >
       <div className={`page ${styles.grid}`}>
         <div className={styles.text}>
-          <p className={styles.kicker}>The public code sample</p>
           <h2 id="iahbrary-title" className={styles.title}>
             Iahbrary
           </h2>

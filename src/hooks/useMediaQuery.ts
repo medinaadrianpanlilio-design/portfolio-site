@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useSyncExternalStore } from 'react'
 
 function getMatches(query: string): boolean {
   if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
@@ -8,23 +8,23 @@ function getMatches(query: string): boolean {
 }
 
 export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(() => getMatches(query))
+  const subscribe = useCallback(
+    (onStoreChange: () => void) => {
+      if (
+        typeof window === 'undefined' ||
+        typeof window.matchMedia !== 'function'
+      ) {
+        return () => {}
+      }
 
-  useEffect(() => {
-    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
-      return
-    }
+      const mediaQuery = window.matchMedia(query)
+      mediaQuery.addEventListener('change', onStoreChange)
+      return () => mediaQuery.removeEventListener('change', onStoreChange)
+    },
+    [query],
+  )
 
-    const mediaQuery = window.matchMedia(query)
-    setMatches(mediaQuery.matches)
+  const getSnapshot = useCallback(() => getMatches(query), [query])
 
-    const handleChange = (event: MediaQueryListEvent) => {
-      setMatches(event.matches)
-    }
-
-    mediaQuery.addEventListener('change', handleChange)
-    return () => mediaQuery.removeEventListener('change', handleChange)
-  }, [query])
-
-  return matches
+  return useSyncExternalStore(subscribe, getSnapshot, () => false)
 }

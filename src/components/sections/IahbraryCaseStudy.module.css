@@ -14,15 +14,9 @@
   grid-row: 1;
 }
 
-.kicker {
-  color: var(--muted);
-  font-size: var(--step-small);
-  font-weight: 650;
-}
-
 .title {
   margin-top: 0.45rem;
-  font-size: clamp(3rem, 5.5vw, 5.8rem);
+  font-size: var(--step-head);
   line-height: 0.9;
 }
 
@@ -127,7 +121,7 @@
   }
 
   .title {
-    font-size: clamp(3rem, 14vw, 4.6rem);
+    font-size: var(--step-head);
   }
 
   .phonePanel {

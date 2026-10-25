@@ -25,6 +25,7 @@ dist-ssr
 
 # local execution artifacts
 .superpowers/
+.taste-skill/
 artifacts/
 test-results/
 playwright-report/

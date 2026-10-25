@@ -27,7 +27,7 @@
 }
 
 .title {
-  font-size: clamp(3rem, 6vw, 6rem);
+  font-size: var(--step-head);
   line-height: 0.9;
 }
 
@@ -98,7 +98,7 @@
   }
 
   .title {
-    font-size: clamp(2.8rem, 13vw, 4.5rem);
+    font-size: var(--step-head);
   }
 
   .meta {
