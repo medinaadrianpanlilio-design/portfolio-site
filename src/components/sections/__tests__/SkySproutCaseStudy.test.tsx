@@ -16,6 +16,9 @@ describe('SkySproutCaseStudy', () => {
     expect(screen.getByText(skySprout.meta)).toBeInTheDocument()
     expect(screen.getByText(skySprout.proof)).toBeInTheDocument()
     expect(screen.getByText('BretRackstar')).toBeInTheDocument()
+    expect(screen.getByText(/Roblox account may be required/i)).toBeInTheDocument()
+    expect(screen.getByText('Sky Sprout')).toBeInTheDocument()
+    expect(screen.getByText(/next image shows the weather card/i)).toBeInTheDocument()
 
     const link = screen.getByRole('link', { name: 'Play on Roblox' })
     expect(link).toHaveAttribute('href', skySprout.liveUrl)

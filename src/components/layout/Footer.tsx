@@ -26,14 +26,6 @@ export function Footer() {
           <p className={styles.note}>
             Built with React, Three.js, and a lot of small fixes.
           </p>
-          <a
-            className={styles.link}
-            href={site.sourceUrl}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Site source
-          </a>
           <p className={styles.copyright}>© 2026 Adrian Medina</p>
         </div>
       </div>

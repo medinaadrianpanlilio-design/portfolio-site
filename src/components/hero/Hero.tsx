@@ -35,7 +35,7 @@ export function Hero() {
           <p className={styles.lead}>I build systems that feel alive.</p>
           <p className={styles.support}>
             CS student, interface builder, and the maker of SkySprout.
-            SkySprout is live on Roblox.
+            SkySprout is live on Roblox; a Roblox account may be required.
           </p>
           <div className={styles.actions}>
             <ArrowLink href={site.skySproutUrl} external variant="solid">

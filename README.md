@@ -29,7 +29,7 @@ No backend, CMS, auth, or contact form.
 
 ## Run locally
 
-Requires Node 20.6+.
+Requires Node 22.12+.
 
 ```bash
 npm ci
@@ -54,6 +54,9 @@ npm test
 npx playwright install chromium
 npm run test:e2e
 ```
+
+The E2E command rebuilds the production bundle before starting the preview, so
+it never validates a stale `dist`.
 
 The Playwright suite covers:
 
@@ -87,7 +90,8 @@ The project is configured for Vercel:
 npx vercel --prod --yes
 ```
 
-Deployment is intentionally left until the local review is approved. The site source link in the footer resolves once the public `portfolio` repository is created.
+Deployment is intentionally left until the local review is approved. The public
+site source will be linked after the local review and repository creation.
 
 ## Contact
 

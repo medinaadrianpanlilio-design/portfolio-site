@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 
 export function useInView<T extends Element>(margin = '200px') {
   const ref = useRef<T>(null)
-  const [inView, setInView] = useState(true)
+  const [inView, setInView] = useState(
+    () => typeof IntersectionObserver === 'undefined',
+  )
 
   useEffect(() => {
     const node = ref.current

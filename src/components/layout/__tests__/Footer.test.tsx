@@ -5,7 +5,7 @@ import { Footer } from '../Footer'
 import { site } from '../../../content/site'
 
 describe('Footer', () => {
-  it('shows the approved contact links and source link', () => {
+  it('shows the approved contact links', () => {
     render(<Footer />)
 
     expect(
@@ -17,10 +17,9 @@ describe('Footer', () => {
     expect(github).toHaveAttribute('target', '_blank')
     expect(github).toHaveAttribute('rel', 'noreferrer')
 
-    expect(screen.getByRole('link', { name: /site source/i })).toHaveAttribute(
-      'href',
-      site.sourceUrl,
-    )
+    expect(
+      screen.queryByRole('link', { name: /site source/i }),
+    ).not.toBeInTheDocument()
 
     expect(screen.queryByText(/phone|résumé|resume/i)).not.toBeInTheDocument()
   })

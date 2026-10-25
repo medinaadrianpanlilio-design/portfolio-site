@@ -14,6 +14,7 @@ describe('Hero', () => {
       screen.getByText('I build systems that feel alive.'),
     ).toBeInTheDocument()
     expect(screen.getByText(/SkySprout is live on Roblox/)).toBeInTheDocument()
+    expect(screen.getByText(/Roblox account may be required/i)).toBeInTheDocument()
 
     const play = screen.getByRole('link', { name: 'Play SkySprout' })
     expect(play).toHaveAttribute(

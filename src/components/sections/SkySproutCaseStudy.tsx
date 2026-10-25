@@ -51,6 +51,10 @@ export function SkySproutCaseStudy() {
             <p>
               Live on Roblox as <strong>BretRackstar</strong>.
             </p>
+            <p>
+              The public listing is <strong>{skySprout.listingName}</strong>. A
+              Roblox account may be required; maturity is {skySprout.maturity}.
+            </p>
             <ArrowLink href={skySprout.liveUrl} external variant="solid">
               Play on Roblox
             </ArrowLink>
@@ -74,8 +78,8 @@ export function SkySproutCaseStudy() {
         />
         <figcaption className={styles.caption}>
           <span className={styles.captionText}>
-            Late-game playtest save. The HUD is counting down to a Snow &amp;
-            Frost Wind event.
+            Late-game playtest save. The next image shows the weather card
+            counting down to a Snow &amp; Frost Wind event.
           </span>
         </figcaption>
       </motion.figure>

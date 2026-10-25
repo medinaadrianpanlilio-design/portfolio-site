@@ -10,6 +10,7 @@ import type {
 export const skySprout = {
   name: 'SkySprout',
   listingName: 'Sky Sprout',
+  maturity: 'Minimal, Ages 16+',
   handle: 'BretRackstar',
   tagline: 'A floating garden that grows while you’re away.',
   meta: 'Built solo in Roblox and Luau. Live since October 2026.',
