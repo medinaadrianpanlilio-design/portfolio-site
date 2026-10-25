@@ -20,6 +20,12 @@ await desktop.waitForSelector('h1')
 await desktop.waitForTimeout(2500)
 await desktop.screenshot({ path: 'artifacts/hero-desktop.png' })
 await desktop.screenshot({ path: 'artifacts/full-desktop.png', fullPage: true })
+await desktop.locator('#work').screenshot({ path: 'artifacts/skysprout-desktop.png' })
+await desktop.locator('#work').scrollIntoViewIfNeeded()
+await desktop.evaluate(() => {
+  if (document.activeElement instanceof HTMLElement) document.activeElement.blur()
+})
+await desktop.screenshot({ path: 'artifacts/work-viewport.png' })
 
 const desktopInfo = await desktop.evaluate(() => ({
   title: document.title,
@@ -39,6 +45,7 @@ await mobile.waitForSelector('h1')
 await mobile.waitForTimeout(1000)
 await mobile.screenshot({ path: 'artifacts/hero-mobile.png' })
 await mobile.screenshot({ path: 'artifacts/full-mobile.png', fullPage: true })
+await mobile.locator('#work').screenshot({ path: 'artifacts/skysprout-mobile.png' })
 
 const mobileInfo = await mobile.evaluate(() => ({
   canvas: Boolean(document.querySelector('canvas')),

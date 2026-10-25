@@ -1,6 +1,7 @@
 import { Footer } from './components/layout/Footer'
 import { Header } from './components/layout/Header'
 import { Hero } from './components/hero/Hero'
+import { SkySproutCaseStudy } from './components/sections/SkySproutCaseStudy'
 import { SkipLink } from './components/ui/SkipLink'
 
 function PlaceholderSection({
@@ -31,11 +32,8 @@ function App() {
       <main id="main">
         <Hero />
 
-        <PlaceholderSection
-          id="work"
-          title="SkySprout"
-          body="A floating garden that grows while you’re away."
-        />
+        <SkySproutCaseStudy />
+
         <PlaceholderSection
           id="iahbrary"
           title="Iahbrary"
