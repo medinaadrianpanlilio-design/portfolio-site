@@ -6,6 +6,11 @@
   background: var(--surface);
 }
 
+.canvasShell {
+  width: 100%;
+  height: clamp(24rem, 42vw, 38rem);
+}
+
 .image {
   width: 100%;
   aspect-ratio: 16 / 9;

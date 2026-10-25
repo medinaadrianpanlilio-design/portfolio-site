@@ -81,6 +81,7 @@
 
 @media (max-width: 900px) {
   .hero {
+    display: block;
     min-height: auto;
     padding-block: 3rem 2rem;
   }
@@ -103,7 +104,6 @@
   }
 
   .scrollCue {
-    position: static;
-    margin-top: 2rem;
+    display: none;
   }
 }
