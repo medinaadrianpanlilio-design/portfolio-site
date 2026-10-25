@@ -1,5 +1,6 @@
 import { Footer } from './components/layout/Footer'
 import { Header } from './components/layout/Header'
+import { Hero } from './components/hero/Hero'
 import { SkipLink } from './components/ui/SkipLink'
 
 function PlaceholderSection({
@@ -28,15 +29,7 @@ function App() {
       <Header />
 
       <main id="main">
-        <section className="section" aria-labelledby="hero-title">
-          <div className="page">
-            <h1 id="hero-title">Adrian Medina</h1>
-            <p className="measure">I build systems that feel alive.</p>
-            <p className="measure">
-              CS student, interface builder, and the maker of SkySprout.
-            </p>
-          </div>
-        </section>
+        <Hero />
 
         <PlaceholderSection
           id="work"

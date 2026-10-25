@@ -1,0 +1,26 @@
+.fallback {
+  width: 100%;
+  max-width: 42rem;
+  margin: 0;
+  padding: 0.55rem;
+  background: var(--surface);
+}
+
+.image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.caption {
+  margin-top: 0.7rem;
+  color: var(--muted);
+  font-size: var(--step-small);
+  line-height: 1.45;
+}
+
+@media (max-width: 900px) {
+  .fallback {
+    max-width: none;
+  }
+}
