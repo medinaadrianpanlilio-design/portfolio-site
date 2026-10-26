@@ -1,7 +1,8 @@
-import type { CSSProperties } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 
 import { AiGuide } from '../components/ai/AiGuide'
+import { HoverPeek } from '../components/home/HoverPeek'
 import { RightNow } from '../components/home/RightNow'
 import { CtaLink } from '../components/ui/CtaLink'
 import { StackTiles } from '../components/ui/StackTiles'
@@ -13,6 +14,20 @@ import styles from './HomePage.module.css'
 
 export function HomePage() {
   usePageTitle('Adrian Medina — Software Engineer')
+
+  const [peek, setPeek] = useState<{
+    image: string
+    title: string
+    x: number
+    y: number
+    visible: boolean
+  }>({
+    image: '',
+    title: '',
+    x: 0,
+    y: 0,
+    visible: false,
+  })
 
   return (
     <main className={styles.home}>
@@ -130,6 +145,25 @@ export function HomePage() {
                     '--project': project.color,
                   } as CSSProperties
                 }
+                onPointerEnter={(e) => {
+                  setPeek({
+                    image: project.image.src,
+                    title: project.name,
+                    x: e.clientX,
+                    y: e.clientY,
+                    visible: true,
+                  })
+                }}
+                onPointerMove={(e) => {
+                  setPeek((prev) => ({
+                    ...prev,
+                    x: e.clientX,
+                    y: e.clientY,
+                  }))
+                }}
+                onPointerLeave={() => {
+                  setPeek((prev) => ({ ...prev, visible: false }))
+                }}
               >
                 <span className={`label ${styles.workIndex}`} aria-hidden="true">
                   {String(index + 1).padStart(2, '0')}
@@ -142,6 +176,14 @@ export function HomePage() {
               </Link>
             ))}
           </div>
+
+          <HoverPeek
+            activeImage={peek.image}
+            activeTitle={peek.title}
+            x={peek.x}
+            y={peek.y}
+            isVisible={peek.visible}
+          />
         </div>
       </section>
 
