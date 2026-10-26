@@ -8,7 +8,7 @@ export function SiteDock() {
   return (
     <div className={styles.dockWrap}>
       <nav aria-label="Primary navigation" className={styles.dock}>
-        <Link to="/" className={styles.brand} aria-label="Adrian Medina">
+        <Link to="/" className={styles.brand} aria-label="AM — Adrian Medina">
           AM
         </Link>
         <span className={styles.divider} aria-hidden="true" />

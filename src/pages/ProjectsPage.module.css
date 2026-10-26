@@ -204,6 +204,7 @@
 @media (max-width: 900px) {
   .stageRunway {
     min-height: auto;
+    overflow: hidden;
   }
   .stageGrid {
     position: static;
@@ -219,6 +220,7 @@
     perspective: 900px;
     height: auto;
     padding-bottom: 2rem;
+    overflow: hidden;
   }
   .isometricPlane {
     width: 100%;

@@ -10,7 +10,7 @@ export function RightNow() {
       <div className={styles.header}>
         <span className={styles.title}>Right now</span>
         <span className={styles.badge}>
-          <span className={styles.pulseDot} aria-label="Active status indicator" />
+          <span className={styles.pulseDot} aria-hidden="true" />
           <span>Available</span>
         </span>
       </div>
