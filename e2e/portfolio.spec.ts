@@ -29,7 +29,7 @@ test('desktop: the landing page leads with positioning, skills, stack, and Linke
 
   await expect(page).toHaveTitle('Adrian Medina — Software Engineer')
   await expect(
-    page.getByRole('heading', { level: 1, name: /Backend, web, mobile/i }),
+    page.getByRole('heading', { level: 1, name: /Software.*Systems.*AI/i }),
   ).toBeVisible()
   await expect(
     page.getByRole('heading', { level: 2, name: 'What I work with.' }),
@@ -152,7 +152,7 @@ test('mobile: floating dock navigates between home, about, and projects without 
   await page.goto('/')
 
   await expect(
-    page.getByRole('heading', { level: 1, name: /Backend, web, mobile/i }),
+    page.getByRole('heading', { level: 1, name: /Software.*Systems.*AI/i }),
   ).toBeVisible()
   const dock = page.getByRole('navigation', { name: 'Primary navigation' })
   await expect(dock).toBeVisible()

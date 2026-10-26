@@ -1,29 +1,58 @@
-import { readFileSync } from 'node:fs'
+import { readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
-
 import { describe, expect, it } from 'vitest'
 
 const root = process.cwd()
 const read = (file: string) => readFileSync(path.join(root, file), 'utf8')
 
-describe('site metadata', () => {
-  it('has the approved title, description, and social image', () => {
+describe('document shell and deployment config', () => {
+  it('describes the landing page and its social image', () => {
     const html = read('index.html')
-
-    expect(html).toContain('<title>Adrian Medina — Software Engineer & Builder</title>')
-    expect(html).toContain(
-      'name="description" content="Computer Science student building software with a visible surface: SkySprout, Iahbrary, HealthyaSat, and Magilas Gym."',
-    )
-    expect(html).toContain('name="theme-color" content="#071a14"')
+    expect(html).toContain('<title>Adrian Medina — Software Engineer</title>')
+    expect(html).toContain('name="color-scheme" content="light"')
+    expect(html).toContain('name="theme-color" content="#f4f2ed"')
     expect(html).toContain('property="og:image" content="/images/og.jpg"')
-    expect(html).toContain('property="og:image:width" content="1200"')
-    expect(html).toContain('property="og:image:height" content="630"')
-    expect(html).toContain('name="twitter:card" content="summary_large_image"')
+    expect(html).toContain('Magilas Gym, HealthyaSat, and Iahbrary')
+    expect(html).toContain('software, systems, and AI')
+    expect(html).not.toMatch(/SkySprout|three|canvas/i)
+    expect(statSync(path.join(root, 'public/images/og.jpg')).size).toBeGreaterThan(
+      10_000,
+    )
   })
 
-  it('ships a custom favicon and robots file', () => {
+  it('does not ship the old 3D runtime', () => {
+    const pkg = JSON.parse(read('package.json')) as {
+      dependencies: Record<string, string>
+      devDependencies: Record<string, string>
+    }
+    const dependencies = {
+      ...pkg.dependencies,
+      ...pkg.devDependencies,
+    }
+
+    expect(dependencies).not.toHaveProperty('three')
+    expect(dependencies).not.toHaveProperty('@react-three/fiber')
+    expect(dependencies).not.toHaveProperty('@react-three/drei')
+    expect(dependencies).not.toHaveProperty('framer-motion')
+    expect(dependencies).toHaveProperty('react-router-dom')
+    expect(dependencies).toHaveProperty('@fontsource/archivo-black')
+  })
+
+  it('supports the project routes without swallowing the AI API', () => {
+    const vercel = JSON.parse(read('vercel.json')) as {
+      rewrites: { source: string; destination: string }[]
+    }
+    expect(vercel.rewrites).toEqual([
+      {
+        source: '/:path((?!api/).*)',
+        destination: '/index.html',
+      },
+    ])
+    expect(vercel.rewrites[0].source).toContain('?!api/')
+  })
+
+  it('keeps the approved favicon and robots file', () => {
     expect(read('public/favicon.svg')).toContain('<svg')
-    expect(read('public/favicon.svg')).toContain('#071a14')
-    expect(read('public/robots.txt')).toContain('User-agent: *')
+    expect(read('public/robots.txt')).toContain('Allow: /')
   })
 })

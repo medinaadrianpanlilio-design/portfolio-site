@@ -14,18 +14,24 @@ function renderPage() {
 }
 
 describe('HomePage', () => {
-  it('leads with Adrian and the backend/web/mobile positioning', () => {
+  it('leads with Adrian and the software/systems/AI positioning', () => {
     renderPage()
 
     expect(
       screen.getByRole('heading', {
         level: 1,
-        name: /Backend, web, mobile/i,
+        name: /Software.*Systems.*AI/i,
       }),
     ).toBeInTheDocument()
     expect(screen.getByText('Adrian Medina')).toBeInTheDocument()
     expect(
       screen.getByRole('complementary', { name: /right now summary/i }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Engineering with intent.' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByAltText(/Adrian Alexander Medina/i),
     ).toBeInTheDocument()
     expect(
       screen.getByRole('heading', { level: 2, name: 'What I work with.' }),

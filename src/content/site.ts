@@ -1,6 +1,6 @@
 export const site = {
   name: 'Adrian Medina',
-  role: 'Computer Science student · backend, web, and mobile developer',
+  role: 'Computer Science student · Software Engineer & AI Integrator',
   email: 'medinaadrianpanlilio@gmail.com',
   linkedin: 'https://www.linkedin.com/in/adrian-alexander-medina-022b8a433/',
   github: 'https://github.com/medinaadrianpanlilio-design',
@@ -9,7 +9,7 @@ export const site = {
 
 export interface StackItem {
   name: string
-  category: 'Languages' | 'Backend & Data' | 'Frontend & Mobile' | 'DevOps & Tools'
+  category: 'Languages' | 'AI & Intelligence' | 'Backend & Data' | 'Frontend & Mobile' | 'DevOps & Tools'
   brandColor: string
   description: string
 }
@@ -20,6 +20,7 @@ export const STACK_ITEMS: StackItem[] = [
   { name: 'Python', category: 'Languages', brandColor: '#3776ab', description: 'Scripting, tooling, and backend routines' },
   { name: 'PHP', category: 'Languages', brandColor: '#777bb4', description: 'Backend APIs and server-side web systems' },
   { name: 'C++', category: 'Languages', brandColor: '#00599c', description: 'Foundational CS, algorithms, data structures' },
+  { name: 'AI Integration', category: 'AI & Intelligence', brandColor: '#10a37f', description: 'LLM APIs, prompt engineering, structured workflows' },
   { name: 'PostgreSQL', category: 'Backend & Data', brandColor: '#336791', description: 'Relational schemas, queries, migrations' },
   { name: 'Supabase', category: 'Backend & Data', brandColor: '#3ecf8e', description: 'Auth, Postgres, storage, row-level security' },
   { name: 'React', category: 'Frontend & Mobile', brandColor: '#61dafb', description: 'Modular web apps with reactive state' },

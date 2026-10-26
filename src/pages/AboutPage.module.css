@@ -1,0 +1,299 @@
+.intro {
+  padding-block: clamp(3rem, 6vw, 5rem) clamp(3rem, 6vw, 5rem);
+}
+
+.title {
+  margin-top: 1.25rem;
+  font-size: var(--step-head);
+}
+
+.lead {
+  max-width: 55ch;
+  margin-top: 1.5rem;
+  color: var(--ink);
+  font-size: var(--step-lead);
+  line-height: 1.5;
+}
+
+.secondary {
+  max-width: 55ch;
+  margin-top: 1rem;
+  color: var(--muted);
+  font-size: var(--step-body);
+  line-height: 1.7;
+}
+
+.introGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 24rem);
+  gap: clamp(2.5rem, 6vw, 5rem);
+  align-items: center;
+}
+
+.introCopy {
+  min-width: 0;
+}
+
+.introPhotoWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.photoFrame {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--bg);
+  box-shadow: 0 24px 50px rgba(24, 24, 24, 0.08);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.photoFrame:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 30px 60px rgba(24, 24, 24, 0.12);
+}
+
+.portrait {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+  background: #ffffff;
+}
+
+.photoBadge {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(251, 250, 247, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-size: var(--step-small);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  box-shadow: 0 8px 20px rgba(24, 24, 24, 0.06);
+}
+
+.badgeDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10a37f;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 3px rgba(16, 163, 127, 0.2);
+}
+
+.photoCaption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding-inline: 0.25rem;
+}
+
+.captionName {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.captionSchool {
+  font-size: var(--step-small);
+  color: var(--muted);
+}
+
+.introBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.5rem;
+}
+
+.factBadge {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--muted-strong);
+  font-size: var(--step-small);
+  font-weight: 600;
+}
+
+.introActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.heroLink {
+  color: var(--ink);
+  font-size: var(--step-small);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+  text-transform: uppercase;
+}
+
+.heroLink:hover {
+  color: var(--accent);
+}
+
+.section {
+  padding-block: clamp(3rem, 6vw, 5rem);
+  border-top: 1px solid var(--line);
+  scroll-margin-top: 4.5rem;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.sectionHead {
+  position: sticky;
+  top: 2rem;
+}
+
+.sectionTitle {
+  max-width: 15ch;
+  margin-top: 0.8rem;
+  font-family: var(--font-display);
+  font-size: var(--step-subhead);
+  font-weight: 400;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.skillsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.25rem 3rem;
+}
+
+.skillGroup {
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.skillGroup h3 {
+  font-family: var(--font-text);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.skillGroup ul {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 0.8rem;
+  color: var(--muted-strong);
+  font-size: 0.95rem;
+}
+
+.education {
+  max-width: 55ch;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted-strong);
+  font-size: var(--step-body);
+  line-height: 1.7;
+}
+
+.educationNote {
+  margin-top: 1rem;
+  color: var(--muted);
+}
+
+.contact {
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.availability {
+  color: var(--muted-strong);
+  font-size: var(--step-body);
+}
+
+.email {
+  display: inline-block;
+  margin-top: 1.25rem;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 3.2vw, 2.6rem);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+.email:hover {
+  color: var(--accent);
+}
+
+.contactLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  font-size: var(--step-small);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.contactLinks a {
+  text-decoration: none;
+  text-underline-offset: 0.25em;
+}
+
+.contactLinks a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.location {
+  margin-top: 2rem;
+  color: var(--muted);
+  font-size: var(--step-small);
+}
+
+@media (max-width: 900px) {
+  .introGrid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .introPhotoWrap {
+    max-width: 22rem;
+    margin-inline: auto;
+    order: -1;
+  }
+
+  .split {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .sectionHead {
+    position: static;
+  }
+
+  .skillsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+}

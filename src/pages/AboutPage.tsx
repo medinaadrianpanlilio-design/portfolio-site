@@ -14,13 +14,47 @@ export function AboutPage() {
     <main>
       <header className={styles.intro}>
         <div className="page">
-          <p className="label">About</p>
-          <h1 className={`${styles.title} display`}>{site.name}</h1>
-          <p className={styles.lead}>{about.intro}</p>
-          <p className={styles.secondary}>{about.second}</p>
-          <CtaLink to="/projects" variant="ghost">
-            See selected work
-          </CtaLink>
+          <div className={styles.introGrid}>
+            <div className={styles.introCopy}>
+              <p className="label">About</p>
+              <h1 className={`${styles.title} display`}>{site.name}</h1>
+              <p className={styles.lead}>{about.intro}</p>
+              <p className={styles.secondary}>{about.second}</p>
+              <div className={styles.introBadges}>
+                <span className={styles.factBadge}>Dean’s Lister (1st–3rd Year)</span>
+                <span className={styles.factBadge}>BS Computer Science · Class of 2027</span>
+                <span className={styles.factBadge}>Pampanga State University</span>
+              </div>
+              <div className={styles.introActions}>
+                <CtaLink to="/projects" variant="ghost">
+                  See selected work
+                </CtaLink>
+                <a href="#contact" className={styles.heroLink}>
+                  Contact details
+                </a>
+              </div>
+            </div>
+            <div className={styles.introPhotoWrap}>
+              <div className={styles.photoFrame}>
+                <img
+                  src="/images/adrian-medina.jpg"
+                  alt="Adrian Alexander Medina — Fourth-year Computer Science student and Software Engineer"
+                  className={styles.portrait}
+                  width="440"
+                  height="440"
+                  loading="eager"
+                />
+                <div className={styles.photoBadge}>
+                  <span className={styles.badgeDot} aria-hidden="true" />
+                  <span>Dean’s Lister · Class of 2027</span>
+                </div>
+              </div>
+              <div className={styles.photoCaption}>
+                <span className={styles.captionName}>Adrian Alexander Medina</span>
+                <span className={styles.captionSchool}>Pampanga State University</span>
+              </div>
+            </div>
+          </div>
         </div>
       </header>
 

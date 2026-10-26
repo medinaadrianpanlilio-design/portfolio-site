@@ -105,7 +105,7 @@ export function ProjectsPage() {
           </div>
           <h1 className={`${styles.title} display`}>Projects</h1>
           <p className={styles.lead}>
-            Backend, web, and mobile systems built for real use. Three projects,
+            Full-stack platforms, production APIs, and intelligent applications built for real use. Three projects,
             then a game I made for fun.
           </p>
         </div>

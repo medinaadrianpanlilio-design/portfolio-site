@@ -77,6 +77,14 @@ function TechIcon({ name }: { name: string }): ReactNode {
           <line x1="10" y1="18" x2="14" y2="18" strokeLinecap="round" />
         </svg>
       );
+    case 'AI Integration':
+      return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M12 2v4m0 12v4M2 12h4m12 0h4" />
+          <path d="m4.93 4.93 2.83 2.83m8.48 8.48 2.83 2.83M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83" />
+          <circle cx="12" cy="12" r="3" fill="currentColor" stroke="none" />
+        </svg>
+      );
     default:
       return (
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -88,7 +96,7 @@ function TechIcon({ name }: { name: string }): ReactNode {
 }
 
 export function StackTiles() {
-  const categories = ['Languages', 'Backend & Data', 'Frontend & Mobile', 'DevOps & Tools'] as const;
+  const categories = ['Languages', 'AI & Intelligence', 'Backend & Data', 'Frontend & Mobile', 'DevOps & Tools'] as const;
 
   return (
     <section aria-label="Technology stack" className={styles.wrap}>

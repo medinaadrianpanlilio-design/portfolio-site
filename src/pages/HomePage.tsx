@@ -42,9 +42,9 @@ export function HomePage() {
 
             <h1 className={`${styles.heroTitle} display`} id="home-title">
               <span className="sr-only">{site.name} — </span>
-              <span>Backend,</span>{' '}
-              <span>web,</span>{' '}
-              <span>mobile.</span>
+              <span>Software.</span>{' '}
+              <span>Systems.</span>{' '}
+              <span>AI.</span>
             </h1>
 
             <p className={styles.heroLead}>{about.intro}</p>
@@ -67,6 +67,76 @@ export function HomePage() {
           </div>
 
           <RightNow />
+        </div>
+      </section>
+
+      <section
+        className={styles.aboutSection}
+        id="about"
+        aria-labelledby="about-heading"
+      >
+        <div className="page">
+          <div className={styles.aboutGrid}>
+            <div className={styles.aboutPhotoCard}>
+              <div className={styles.photoFrame}>
+                <img
+                  src="/images/adrian-medina.jpg"
+                  alt="Adrian Alexander Medina — Fourth-year Computer Science student and Software Engineer"
+                  className={styles.portrait}
+                  width="480"
+                  height="480"
+                  loading="lazy"
+                />
+                <div className={styles.photoBadge}>
+                  <span className={styles.badgeDot} aria-hidden="true" />
+                  <span>Dean’s Lister · 1st–3rd Year</span>
+                </div>
+              </div>
+              <div className={styles.photoCaption}>
+                <span className={styles.captionName}>Adrian Alexander Medina</span>
+                <span className={styles.captionSchool}>Pampanga State University · Class of 2027</span>
+              </div>
+            </div>
+
+            <div className={styles.aboutContent}>
+              <p className="label">About Me</p>
+              <h2 className={`${styles.aboutTitle} display`} id="about-heading">
+                Engineering with intent.
+              </h2>
+              <p className={styles.aboutLead}>
+                {about.intro}
+              </p>
+              <p className={styles.aboutBody}>
+                {about.second}
+              </p>
+
+              <div className={styles.factsGrid}>
+                <div className={styles.fact}>
+                  <span className="label">Status</span>
+                  <p className={styles.factVal}>4th Year CS Student</p>
+                </div>
+                <div className={styles.fact}>
+                  <span className="label">University</span>
+                  <p className={styles.factVal}>Pampanga State University</p>
+                </div>
+                <div className={styles.fact}>
+                  <span className="label">Academic Rank</span>
+                  <p className={styles.factVal}>Dean’s Lister (1st–3rd Year)</p>
+                </div>
+                <div className={styles.fact}>
+                  <span className="label">Looking For</span>
+                  <p className={styles.factVal}>2026–2027 Software Internship</p>
+                </div>
+              </div>
+
+              <div className={styles.aboutActions}>
+                <CtaLink to="/about">More about background & skills</CtaLink>
+                <a className={styles.heroLink} href="#contact">
+                  Get in touch
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
