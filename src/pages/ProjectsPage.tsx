@@ -105,10 +105,9 @@ export function ProjectsPage() {
             <div className={styles.isometricPlane}>
               {projects.map((project, index) => {
                 const d = index - scrollProgress;
-                // In isometric space (rotateX 54deg, rotateZ -34deg), cards glide diagonally
-                // and stack with depth, remaining permanently tilted at an angle
+                // Along the right-sided tilted track (rotate 11deg), cards stream smoothly along Y
                 const cardStyle: React.CSSProperties = {
-                  transform: `translate3d(${d * -130}px, ${d * 180}px, 0)`,
+                  transform: `translate3d(0, ${d * 540}px, 0) scale(${1 - Math.min(0.06, Math.abs(d) * 0.04)})`,
                   opacity: Math.max(0.18, 1 - Math.abs(d) * 0.45),
                   zIndex: 100 - Math.round(Math.abs(d) * 10),
                 };
