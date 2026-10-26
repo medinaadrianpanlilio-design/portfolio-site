@@ -1,0 +1,270 @@
+.intro {
+  padding-block: clamp(3rem, 6vw, 5rem) clamp(2rem, 4vw, 3rem);
+}
+
+.topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.title {
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  font-size: var(--step-head);
+}
+
+.lead {
+  max-width: 48ch;
+  margin-top: 1.25rem;
+  color: var(--muted-strong);
+  font-size: var(--step-lead);
+  line-height: 1.45;
+}
+
+/* Runway creates the scroll distance */
+.stageRunway {
+  position: relative;
+  min-height: 280vh;
+}
+
+.stageGrid {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: center;
+  overflow: hidden;
+}
+
+.sticky {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 10;
+}
+
+.stickyInner {
+  max-width: 32rem;
+  transition: opacity 0.2s ease;
+}
+
+.activeTitle {
+  margin-top: 1.25rem;
+  overflow-wrap: normal;
+  font-size: clamp(3rem, 5.2vw, 4.8rem);
+  line-height: 0.9;
+  transition: color 0.25s ease;
+}
+
+.activeTitleLong {
+  font-size: clamp(2.2rem, 4.2vw, 4rem);
+}
+
+.activeRole {
+  margin-top: 1.25rem;
+  color: var(--muted);
+  font-size: var(--step-small);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.activePills {
+  margin-top: 0.9rem;
+}
+
+.activeSummary {
+  max-width: 42ch;
+  margin-top: 1.35rem;
+  color: var(--muted-strong);
+  font-size: var(--step-lead);
+  line-height: 1.45;
+}
+
+.activeSummary + a {
+  margin-top: 1.75rem;
+}
+
+/* Isometric 3D Stage */
+.stageWrap {
+  perspective: 1300px;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.isometricPlane {
+  position: relative;
+  width: 440px;
+  height: 520px;
+  transform-style: preserve-3d;
+  transform: rotateX(54deg) rotateZ(-34deg);
+  will-change: transform;
+}
+
+.isoCard {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+  transition: opacity 0.2s ease-out;
+}
+
+.mobileMeta {
+  display: none;
+}
+
+.hobby {
+  padding-block: clamp(3rem, 6vw, 5.5rem);
+  border-top: 1px solid var(--line);
+  position: relative;
+  z-index: 20;
+  background: var(--bg);
+}
+
+.hobbyGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  align-items: center;
+  gap: clamp(2rem, 6vw, 6rem);
+}
+
+.hobbyTitle {
+  margin-top: 1rem;
+  font-size: var(--step-head);
+}
+
+.hobbySubtitle {
+  margin-top: 0.7rem;
+  color: var(--muted-strong);
+  font-size: var(--step-lead);
+}
+
+.hobbySummary {
+  max-width: 50ch;
+  margin-top: 1rem;
+  color: var(--muted);
+}
+
+.hobbyLinks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 1.75rem;
+}
+
+.hobbyLive {
+  color: var(--ink);
+  font-size: var(--step-small);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+  text-transform: uppercase;
+}
+
+.hobbyLive:hover {
+  color: var(--accent);
+}
+
+.hobbyVisual {
+  display: block;
+  padding: 0.55rem;
+  border-radius: var(--radius);
+  background: var(--soft);
+  box-shadow: 0 20px 50px rgba(24, 24, 24, 0.1);
+  text-decoration: none;
+  transform: rotate(1.5deg);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.hobbyVisual:hover {
+  transform: rotate(0deg) translateY(-3px);
+  box-shadow: 0 28px 60px rgba(24, 24, 24, 0.13);
+}
+
+.hobbyVisual img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.8rem;
+  object-fit: cover;
+}
+
+/* Tablet & Mobile responsive layout */
+@media (max-width: 900px) {
+  .stageRunway {
+    min-height: auto;
+  }
+  .stageGrid {
+    position: static;
+    height: auto;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    overflow: visible;
+  }
+  .sticky {
+    display: none;
+  }
+  .stageWrap {
+    perspective: 900px;
+    height: auto;
+    padding-bottom: 2rem;
+  }
+  .isometricPlane {
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    transform: rotateX(20deg) rotateZ(-8deg);
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+  .isoCard {
+    position: static;
+    width: 100%;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  .mobileMeta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    padding: 1.25rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .mobileTitle {
+    font-size: clamp(2rem, 6vw, 3rem);
+  }
+  .mobileSummary {
+    color: var(--muted-strong);
+    font-size: var(--step-body);
+    line-height: 1.45;
+  }
+  .hobbyGrid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .isometricPlane {
+    transform: none !important;
+  }
+  .isoCard {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
