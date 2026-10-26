@@ -1,0 +1,93 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.emailLink {
+  font-family: var(--font-display, 'Archivo Black', sans-serif);
+  font-size: clamp(1.4rem, 3.2vw, 2.6rem);
+  line-height: 1.1;
+  color: var(--ink, #181818);
+  text-decoration: none;
+  word-break: break-all;
+  transition: color 0.15s ease;
+}
+
+.emailLink:hover {
+  color: var(--accent, #b54718);
+}
+
+.emailLink:focus-visible {
+  outline: 2px solid var(--accent, #b54718);
+  outline-offset: 4px;
+}
+
+.copyBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-text, 'Inter', sans-serif);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: var(--ink, #181818);
+  border: 1px solid var(--ink, #181818);
+  border-radius: 9999px;
+  padding: 0.45rem 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.18s ease, transform 0.12s ease;
+  white-space: nowrap;
+}
+
+.copyBtn:hover {
+  background-color: var(--accent, #b54718);
+  border-color: var(--accent, #b54718);
+  transform: translateY(-1px);
+}
+
+.copyBtn:focus-visible {
+  outline: 2px solid var(--accent, #b54718);
+  outline-offset: 3px;
+}
+
+.copyBtn svg {
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
+.toast {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-text, 'Inter', sans-serif);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #2f5418;
+  background: #e5edd7;
+  border: 1px solid #c8ddb0;
+  border-radius: 6px;
+  padding: 0.35rem 0.75rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { AiGuide } from '../components/ai/AiGuide'
 import { HoverPeek } from '../components/home/HoverPeek'
 import { RightNow } from '../components/home/RightNow'
+import { CopyEmail } from '../components/ui/CopyEmail'
 import { CtaLink } from '../components/ui/CtaLink'
 import { StackTiles } from '../components/ui/StackTiles'
 import { about } from '../content/about'
@@ -207,9 +208,7 @@ export function HomePage() {
           </div>
 
           <div className={styles.contactBody}>
-            <a className={styles.contactEmail} href={`mailto:${site.email}`}>
-              {site.email}
-            </a>
+            <CopyEmail email={site.email} />
             <div className={styles.socialLinks}>
               <a href={site.linkedin} target="_blank" rel="noreferrer">
                 LinkedIn <span aria-hidden="true">↗</span>

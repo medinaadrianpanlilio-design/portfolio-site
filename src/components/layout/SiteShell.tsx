@@ -25,6 +25,8 @@ function ScrollManager() {
 }
 
 export function SiteShell() {
+  const location = useLocation()
+
   return (
     <>
       <a className="skip-link" href="#main">
@@ -32,7 +34,7 @@ export function SiteShell() {
       </a>
       <ScrollManager />
       <div className="site-content">
-        <div className="site-main" id="main">
+        <div className="site-main" id="main" key={location.pathname}>
           <Outlet />
         </div>
         <SiteFooter />

@@ -92,8 +92,20 @@ a {
   padding-bottom: 6.5rem;
 }
 
+@keyframes routeEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .site-main {
   flex: 1;
+  animation: routeEnter 0.22s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 
 .page {
