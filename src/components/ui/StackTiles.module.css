@@ -1,0 +1,122 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.categoryGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.categoryTitle {
+  font-family: var(--font-text, 'Inter', sans-serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted, #716c64);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 0.75rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tile {
+  background: var(--paper, #fbfaf7);
+  border: 1px solid var(--line, #ddd8cf);
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  transition: transform 0.18s cubic-bezier(0.2, 0, 0.2, 1),
+              border-color 0.18s ease,
+              box-shadow 0.18s ease;
+  position: relative;
+  cursor: default;
+}
+
+.iconWrap {
+  width: 2.1rem;
+  height: 2.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #555047;
+  transition: color 0.18s ease, transform 0.18s ease;
+}
+
+.iconWrap svg {
+  width: 1.55rem;
+  height: 1.55rem;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.name {
+  font-family: var(--font-text, 'Inter', sans-serif);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--ink, #181818);
+  line-height: 1.2;
+}
+
+.desc {
+  font-family: var(--font-text, 'Inter', sans-serif);
+  font-size: 0.72rem;
+  color: var(--muted, #716c64);
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tile:hover {
+  transform: translateY(-3px);
+  border-color: var(--brand, var(--accent, #b54718));
+  box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.12),
+              0 0 0 1px var(--brand, var(--accent, #b54718));
+}
+
+.tile:hover .iconWrap {
+  color: var(--brand);
+  transform: scale(1.08);
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+  .tile {
+    padding: 0.75rem 0.75rem;
+    gap: 0.6rem;
+  }
+  .iconWrap {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+  .iconWrap svg {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+  .name {
+    font-size: 0.8rem;
+  }
+  .desc {
+    display: none;
+  }
+}
