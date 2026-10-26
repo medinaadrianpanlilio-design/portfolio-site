@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 
 import { AiGuide } from '../components/ai/AiGuide'
+import { RightNow } from '../components/home/RightNow'
 import { CtaLink } from '../components/ui/CtaLink'
 import { StackTiles } from '../components/ui/StackTiles'
 import { about } from '../content/about'
@@ -49,26 +50,7 @@ export function HomePage() {
             </div>
           </div>
 
-          <aside className={styles.glance} aria-label="At a glance">
-            <p className="label">At a glance</p>
-            <dl>
-              <div>
-                <dt>Studying</dt>
-                <dd>{about.educationShort}</dd>
-              </div>
-              <div>
-                <dt>Focus</dt>
-                <dd>Backend, data, and mobile systems.</dd>
-              </div>
-              <div>
-                <dt>Open to</dt>
-                <dd>{about.availabilityShort}</dd>
-              </div>
-            </dl>
-            <p className={styles.glanceLocation}>
-              Based in {site.location}
-            </p>
-          </aside>
+          <RightNow />
         </div>
       </section>
 

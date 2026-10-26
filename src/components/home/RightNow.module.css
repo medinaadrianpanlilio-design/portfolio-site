@@ -1,0 +1,128 @@
+.panel {
+  background: var(--paper, #fbfaf7);
+  border: 1px solid var(--line, #ddd8cf);
+  border-radius: 12px;
+  padding: 1.5rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.06);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-family: var(--font-text, 'Inter', sans-serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted, #716c64);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #2f5418;
+  background: #e5edd7;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+}
+
+.pulseDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4c7a2a;
+  position: relative;
+  display: inline-block;
+  box-shadow: 0 0 0 0 rgba(76, 122, 42, 0.7);
+  animation: pulse 2.2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(76, 122, 42, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgba(76, 122, 42, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(76, 122, 42, 0);
+  }
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--line, #ddd8cf);
+}
+
+.row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.label {
+  font-family: var(--font-text, 'Inter', sans-serif);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--muted, #716c64);
+  text-transform: uppercase;
+}
+
+.value {
+  font-family: var(--font-text, 'Inter', sans-serif);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ink, #181818);
+  line-height: 1.4;
+}
+
+.subValue {
+  font-weight: 400;
+  color: var(--muted-strong, #4f4a43);
+  font-size: 0.82rem;
+}
+
+.shipLink {
+  color: var(--accent, #b54718);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+  transition: transform 0.15s ease;
+}
+
+.shipLink:hover {
+  text-decoration: underline;
+  transform: translateX(2px);
+}
+
+.shipLink:focus-visible {
+  outline: 2px solid var(--accent, #b54718);
+  outline-offset: 2px;
+}

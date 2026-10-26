@@ -25,7 +25,7 @@ describe('HomePage', () => {
     ).toBeInTheDocument()
     expect(screen.getByText('Adrian Medina')).toBeInTheDocument()
     expect(
-      screen.getByRole('complementary', { name: 'At a glance' }),
+      screen.getByRole('complementary', { name: /right now summary/i }),
     ).toBeInTheDocument()
     expect(
       screen.getByRole('heading', { level: 2, name: 'What I work with.' }),
@@ -59,9 +59,11 @@ describe('HomePage', () => {
     expect(
       screen.getByRole('link', { name: 'All projects' }),
     ).toHaveAttribute('href', '/projects')
-    expect(
-      screen.getByRole('link', { name: /MAGILAS/i }),
-    ).toHaveAttribute('href', '/projects/magilas')
+    const magilasLinks = screen.getAllByRole('link', { name: /MAGILAS/i })
+    expect(magilasLinks.length).toBeGreaterThanOrEqual(2)
+    for (const link of magilasLinks) {
+      expect(link).toHaveAttribute('href', '/projects/magilas')
+    }
 
     const linkedInLinks = screen.getAllByRole('link', { name: 'LinkedIn' })
     expect(linkedInLinks.length).toBeGreaterThanOrEqual(2)
