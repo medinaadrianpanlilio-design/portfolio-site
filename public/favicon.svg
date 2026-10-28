@@ -1,6 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Adrian Medina leaf mark">
-  <rect width="64" height="64" fill="#071a14" />
-  <path d="M32 12c12 0 20 8 20 20-12 0-20-8-20-20Z" fill="#7fd37f" />
-  <path d="M32 52c-12 0-20-8-20-20 12 0 20 8 20 20Z" fill="#e8b45a" />
-  <path d="M32 18v28" stroke="#f4ebdd" stroke-width="5" stroke-linecap="round" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="10" fill="#181818" />
+  <path d="M14 45 25.5 18h5.2L42 45h-6.4l-2-5.4H22.4L20.4 45H14Zm10.2-10.4h7.7l-3.8-10-3.9 10Z" fill="#f4f2ed" />
+  <rect x="46" y="18" width="5" height="27" fill="#b54718" />
 </svg>

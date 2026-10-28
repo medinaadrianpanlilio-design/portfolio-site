@@ -1,36 +1,22 @@
-import { Footer } from './components/layout/Footer'
-import { Header } from './components/layout/Header'
-import { Hero } from './components/hero/Hero'
-import { About } from './components/sections/About'
-import { Contact } from './components/sections/Contact'
-import { IahbraryCaseStudy } from './components/sections/IahbraryCaseStudy'
-import { OtherWork } from './components/sections/OtherWork'
-import { SkySproutCaseStudy } from './components/sections/SkySproutCaseStudy'
-import { SkipLink } from './components/ui/SkipLink'
+import { Route, Routes } from 'react-router-dom'
 
-function App() {
+import { SiteShell } from './components/layout/SiteShell'
+import { AboutPage } from './pages/AboutPage'
+import { HomePage } from './pages/HomePage'
+import { NotFoundPage } from './pages/NotFoundPage'
+import { ProjectDetailPage } from './pages/ProjectDetailPage'
+import { ProjectsPage } from './pages/ProjectsPage'
+
+export default function App() {
   return (
-    <div id="top">
-      <SkipLink />
-      <Header />
-
-      <main id="main">
-        <Hero />
-
-        <SkySproutCaseStudy />
-
-        <IahbraryCaseStudy />
-
-        <OtherWork />
-
-        <About />
-
-        <Contact />
-      </main>
-
-      <Footer />
-    </div>
+    <Routes>
+      <Route element={<SiteShell />}>
+        <Route index element={<HomePage />} />
+        <Route path="projects" element={<ProjectsPage />} />
+        <Route path="projects/:slug" element={<ProjectDetailPage />} />
+        <Route path="about" element={<AboutPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
+    </Routes>
   )
 }
-
-export default App

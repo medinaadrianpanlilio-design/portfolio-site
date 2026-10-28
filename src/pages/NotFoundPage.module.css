@@ -1,0 +1,19 @@
+.main {
+  display: flex;
+  min-height: 65vh;
+  align-items: center;
+  padding-block: clamp(4rem, 10vw, 9rem);
+}
+
+.title {
+  max-width: 12ch;
+  margin-top: 1.25rem;
+  font-size: var(--step-head);
+}
+
+.body {
+  max-width: 42ch;
+  margin-top: 1.25rem;
+  margin-bottom: 2rem;
+  color: var(--muted);
+}

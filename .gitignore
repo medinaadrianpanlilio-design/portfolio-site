@@ -30,3 +30,9 @@ artifacts/
 test-results/
 playwright-report/
 coverage/
+
+# local AI keys
+.env
+.env.local
+.env.*.local
+!.env.example

@@ -1,0 +1,73 @@
+.rail {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 50;
+  display: flex;
+  width: var(--rail);
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 0;
+  border-right: 1px solid var(--line);
+  background: var(--bg);
+}
+
+.brand,
+.link,
+.bottom {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.brand {
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.nav {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.25rem, 2.4vh, 2rem);
+}
+
+.link,
+.bottom {
+  position: relative;
+  color: var(--muted);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  transition: color var(--transition);
+}
+
+.link:hover,
+.bottom:hover {
+  color: var(--ink);
+}
+
+.active {
+  color: var(--accent);
+}
+
+.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -0.7rem;
+  width: 2px;
+  height: 100%;
+  background: var(--accent);
+}
+
+@media (max-width: 900px) {
+  .rail {
+    display: none;
+  }
+}

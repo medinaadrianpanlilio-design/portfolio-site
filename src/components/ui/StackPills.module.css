@@ -1,0 +1,16 @@
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.pill {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--paper) 55%, transparent);
+  color: var(--muted-strong);
+  font-size: var(--step-small);
+  font-weight: 500;
+  line-height: 1;
+}

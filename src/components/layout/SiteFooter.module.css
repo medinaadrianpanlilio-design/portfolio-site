@@ -1,0 +1,30 @@
+.footer {
+  border-top: 1px solid var(--line);
+  margin-top: clamp(4rem, 8vw, 7rem);
+  padding-block: 1.5rem 2rem;
+}
+
+.inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--muted);
+  font-size: var(--step-small);
+}
+
+.links {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.links a {
+  text-decoration: none;
+  text-underline-offset: 0.2em;
+}
+
+.links a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}

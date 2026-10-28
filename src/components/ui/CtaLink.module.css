@@ -1,0 +1,49 @@
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: fit-content;
+  padding: 0.8rem 1.15rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: var(--step-small);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition:
+    background-color var(--transition),
+    color var(--transition),
+    border-color var(--transition),
+    transform var(--transition);
+}
+
+.solid {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.solid:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+}
+
+.ghost {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+.ghost:hover {
+  border-color: var(--ink);
+  transform: translateY(-2px);
+}
+
+.arrow {
+  transition: transform var(--transition);
+}
+
+.cta:hover .arrow {
+  transform: translate(0.2rem, -0.1rem);
+}

@@ -1,49 +1,28 @@
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  /* Stage */
-  --bg: #071a14;
-  --bg-deep: #04110d;
-  --surface: #0e2a20;
-  --surface-raised: #13382b;
+  --bg: #f4f2ed;
+  --paper: #fbfaf7;
+  --ink: #181818;
+  --muted: #716c64;
+  --muted-strong: #4f4a43;
+  --line: #ddd8cf;
+  --accent: #b54718;
 
-  /* Ink */
-  --ink: #f4ebdd;
-  --muted: #a9b8ad;
+  --font-display: 'Archivo Black', Arial, sans-serif;
+  --font-text: 'Inter Variable', Inter, system-ui, sans-serif;
 
-  /* Action */
-  --accent: #e8b45a;
-  --accent-ink: #1a130a;
+  --step-display: clamp(3.4rem, 7.2vw, 6.6rem);
+  --step-project: clamp(2.4rem, 4.4vw, 4.4rem);
+  --step-head: clamp(2.4rem, 4.4vw, 4rem);
+  --step-subhead: clamp(1.5rem, 2.2vw, 2rem);
+  --step-lead: clamp(1.15rem, 1.4vw, 1.35rem);
+  --step-body: 1rem;
+  --step-small: 0.75rem;
 
-  /* Content accents, used only inside the project that owns them */
-  --leaf: #7fd37f;
-  --sky: #7ed0f0;
-  --berry: #e86aa6;
-  --mint: #b9e6d0;
-  --healthya: #b69cff;
-
-  /* Type */
-  --font-display: 'Instrument Serif', Georgia, serif;
-  --font-text: 'Manrope Variable', Manrope, system-ui, sans-serif;
-
-  --step-small: clamp(1rem, 0.97rem + 0.1vw, 1.0625rem);
-  --step-body: clamp(1.125rem, 1.05rem + 0.3vw, 1.25rem);
-  --step-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
-  --step-subhead: clamp(1.5rem, 1.2rem + 1.3vw, 2rem);
-  --step-head: clamp(2rem, 1.3rem + 3.2vw, 4rem);
-  --step-stat: clamp(2.5rem, 2rem + 1.4vw, 3rem);
-  --step-display: clamp(3.5rem, 1rem + 9vw, 9rem);
-
-  /* Space and measure */
-  --measure: 62ch;
-  --page-gutter: clamp(1.25rem, 4vw, 4.5rem);
-  --section-space: clamp(5rem, 10vw, 9rem);
-  --max-width: 90rem;
-  --header-height: 4.5rem;
-
-  /* Shape */
-  --radius: 0;
-  --phone-radius: 2.5rem;
-
-  --motion: 220ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  --gutter: clamp(1.25rem, 4vw, 4rem);
+  --rail: 4rem;
+  --max: 92rem;
+  --radius: 1.25rem;
+  --transition: 220ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }

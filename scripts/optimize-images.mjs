@@ -8,13 +8,10 @@ const sourceDir = path.join(root, 'assets', 'source')
 const outputDir = path.join(root, 'public', 'images')
 
 const imageJobs = [
+  { source: 'magilas-landing.png', name: 'magilas-landing', widths: [800, 1440] },
+  { source: 'healthyaSat-extension.png', name: 'healthyaSat-extension', widths: [600, 843] },
   { source: 'iahbrary-home.png', name: 'iahbrary-home', widths: [360, 720] },
   { source: 'skysprout-garden.png', name: 'skysprout-garden', widths: [800, 1600] },
-  { source: 'skysprout-weather.png', name: 'skysprout-weather', widths: [800, 1600] },
-  { source: 'skysprout-listing.png', name: 'skysprout-listing', widths: [600, 1000] },
-  { source: 'skysprout-thumbnail.png', name: 'skysprout-thumbnail', widths: [400, 768] },
-  { source: 'skysprout-icon.png', name: 'skysprout-icon', widths: [256, 512] },
-  { source: 'healthyaSat-extension.png', name: 'healthyaSat-extension', widths: [600, 843] },
 ]
 
 await mkdir(outputDir, { recursive: true })
@@ -34,9 +31,3 @@ for (const job of imageJobs) {
     console.log(`wrote ${path.relative(root, output)}`)
   }
 }
-
-await sharp(path.join(sourceDir, 'skysprout-garden.png'))
-  .resize(1200, 630, { fit: 'cover', position: 'centre' })
-  .jpeg({ quality: 84 })
-  .toFile(path.join(outputDir, 'og.jpg'))
-console.log('wrote public/images/og.jpg')

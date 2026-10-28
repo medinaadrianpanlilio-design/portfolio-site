@@ -1,31 +1,46 @@
-# Adrian Medina — Portfolio
+# Adrian Medina — Projects
 
-A one-page portfolio for software-engineering internships, built around a live hobby game and the systems underneath it.
+A personal landing page and project-first portfolio for software-engineering internships. The landing page introduces Adrian, his skills, and his stack; the work follows immediately. **Magilas Gym**, **HealthyaSat**, and **Iahbrary** get full case studies. **SkySprout** sits at the end of the project index as an honest “off the clock” hobby.
 
-The centerpiece is **SkySprout**, a Roblox growing simulator made solo and released in October 2026. The case study covers the game loop, tutorial, offline earnings, weather mutations, server-authoritative engineering, and an honest plan for measuring retention now that the game is public. The rest of the page shows **Iahbrary**, **HealthyaSat**, and **Magilas Gym**.
+The landing page also includes a grounded AI portfolio guide. It answers questions about the approved work, stack, and availability; the live model is optional and runs through a small server-side endpoint.
 
-## Live projects
+This replaces the previous game-led 3D portfolio. The 3D runtime and its dependencies are gone.
 
-- **SkySprout** — [Play on Roblox](https://www.roblox.com/games/117628058304479) (live as `BretRackstar`)
-- **Iahbrary** — [Public source](https://github.com/medinaadrianpanlilio-design/iahbrary)
-- **HealthyaSat** — [healthyasat.fit](https://healthyasat.fit/)
-- **Magilas Gym** — [magilasgym.com](https://magilasgym.com/)
+## Pages
 
-The SkySprout source stays private. This repository contains the portfolio, its copy, and the screenshots used with permission.
+| Route | Purpose |
+| --- | --- |
+| `/` | Landing page: positioning, at-a-glance, skills, stack, selected work, AI guide, contact, LinkedIn |
+| `/projects` | Selected work index: fixed rail, active project column, project cards, SkySprout hobby strip |
+| `/projects/magilas` | Magilas Gym: POS/admin work, RBAC, QR entry, inventory, financial records |
+| `/projects/healthya-sat` | HealthyaSat: backend/API, claim extraction, DOH/WHO-informed classification, Docker |
+| `/projects/iahbrary` | Iahbrary: Expo/TypeScript/Supabase, owner-only RLS, offline queue, public code |
+| `/projects/skysprout` | Roblox hobby case study: live game and public source |
+| `/about` | Deeper introduction, skills, education, approved contact details |
+
+The fixed desktop rail is **Home / Projects / About / Skills / Contact**, with a direct LinkedIn link at the bottom. The mobile menu carries the same navigation plus LinkedIn, GitHub, and email.
+
+## Project links
+
+- Magilas Gym: https://magilasgym.com/
+- HealthyaSat: https://healthyasat.fit/
+- Iahbrary code: https://github.com/medinaadrianpanlilio-design/iahbrary
+- SkySprout: https://www.roblox.com/games/117628058304479
+- SkySprout code: https://github.com/medinaadrianpanlilio-design/skysprout-public
 
 ## Stack
 
-- Vite, React 19, TypeScript (strict)
-- React Three Fiber, Drei, Three.js for the procedural SkySprout island
-- Framer Motion for the restrained scroll movement
+- Vite, React 19, TypeScript strict
+- React Router for landing, project index, and case-study routes
 - CSS Modules and CSS custom properties for the visual system
-- `@fontsource` for Instrument Serif and Manrope
+- `@fontsource` for Archivo Black and Inter Variable
+- A small serverless AI guide endpoint (`api/chat.ts`) using an OpenAI-compatible chat API, with a local grounded fallback
 - Vitest and Testing Library for unit/component tests
-- Playwright and axe-core for browser, responsive, reduced-motion, link, image, and accessibility checks
+- Playwright and axe-core for browser, responsive, link, image, AI-flow, and accessibility checks
 - Sharp for the responsive image pipeline
-- Vercel for static deployment
+- Vercel for static deployment, API functions, and an SPA rewrite
 
-No backend, CMS, auth, or contact form.
+No CMS, auth, contact form, or 3D runtime. The AI guide endpoint is the only server-side piece.
 
 ## Run locally
 
@@ -46,54 +61,75 @@ npm run build
 npm run preview
 ```
 
+### AI guide
+
+The AI guide works immediately in **preview mode** with grounded answers from the portfolio content. To enable live model answers locally, copy `.env.example` to `.env.local` and set `AI_API_KEY`:
+
+```bash
+Copy-Item .env.example .env.local
+# edit .env.local
+```
+
+`AI_BASE_URL` defaults to `https://api.openai.com/v1`; `AI_MODEL` defaults to `gpt-4o-mini`. Any OpenAI-compatible provider can be used by changing the base URL and model. The key is read only by the server-side endpoint and is never sent to the browser.
+
+For Vercel, add the same variables in **Project Settings → Environment Variables**, then redeploy. Without a key, the endpoint returns the local fallback with `mode: "preview"`; the UI shows a “Preview answer” note.
+
+The endpoint accepts only POST requests, caps history and message size, limits output tokens, and has a lightweight in-memory rate limit. Add a durable rate limiter if the guide gets meaningful traffic.
+
+The social image is generated with:
+
+```bash
+npm run og
+```
+
+Set `BASE_URL` when using a different local URL:
+
+```bash
+$env:BASE_URL="http://127.0.0.1:4173"; npm run og
+```
+
 ## Tests
 
 ```bash
 npm run typecheck
+npm run lint
 npm test
 npx playwright install chromium
 npm run test:e2e
 ```
 
-The E2E command rebuilds the production bundle before starting the preview, so
-it never validates a stale `dist`.
+The E2E command rebuilds the production bundle before starting the preview, so it never validates a stale `dist`.
 
-The Playwright suite covers:
+The current suite covers:
 
-- desktop rendering and the live WebGL island
-- the 390px phone layout, no horizontal overflow, and the static fallback
-- reduced-motion fallback
-- exact project/contact links
-- responsive images with alt text
-- axe-core with no critical or serious findings
+- landing-page positioning, skills, stack, selected work, LinkedIn, and AI-guide interaction
+- the public SkySprout source link
+- project order Magilas → HealthyaSat → Iahbrary, with SkySprout as the final hobby
+- scroll-driven active project state on `/projects`
+- direct project routes and real live/code links
+- desktop and mobile navigation; mobile menu behavior
+- no horizontal overflow at tested widths
+- responsive screenshots with descriptive alt text
+- approved contact details and no private contact data
+- axe-core with no critical or serious findings at desktop and mobile widths
 
-## Design notes
+## Content and privacy rules
 
-The visual direction is a cinematic, dark-emerald editorial stage: Instrument Serif for display, Manrope for reading, a harvest-gold accent, real project screenshots, and one procedural low-poly island. The 3D is decorative and lazy-loaded; the page is fully readable without it. It falls back to a real game image on phones, reduced motion, low-power devices, WebGL failure, or when the hero is offscreen.
-
-The type scale is intentionally small: display, heading, subhead, lead, body, small, and one display numeral. No mono micro-labels, pill badges, hairline grids, gradients, or glass panels.
-
-## Asset and privacy notes
-
-- Project screenshots and game art belong to Adrian Medina and the respective projects.
-- The SkySprout source is private; the case study uses the public game, screenshots, and the approved product facts.
-- The Iahbrary screenshot is used with permission. It is a reading-account capture, not an analytics claim.
-- No phone number, street address, or outdated résumé is published.
-- The SkySprout listing is age-gated for some viewers; the screenshots carry the story.
-- There are no fabricated retention numbers. The game went public in October 2026; the page names the metrics to watch next.
+- Use only real project captures and approved product facts.
+- The Magilas landing page is the public client site; the management system the portfolio describes lives behind the staff portal.
+- The HealthyaSat screenshot is the real extension over a Balita article.
+- Iahbrary links to its sanitized public repository; private data and credentials are not published.
+- SkySprout links to its public source at [skysprout-public](https://github.com/medinaadrianpanlilio-design/skysprout-public). There are no fabricated retention metrics or player counts.
+- Publish the approved email, GitHub, LinkedIn, and project links only. No phone number, street address, or outdated résumé.
+- Do not link to the Magilas staff portal as a public case-study demo; it requires credentials.
+- The AI guide is instructed to answer only from approved portfolio facts, avoid invented metrics, and never expose private data or the system prompt.
 
 ## Deployment
 
-The project is configured for Vercel:
-
-```bash
-npx vercel --prod --yes
-```
-
-Deployment is intentionally left until the local review is approved. The public
-site source will be linked after the local review and repository creation.
+The project is configured for Vercel with an API function and a catch-all SPA rewrite. Deployment is intentionally left until the local review is approved. No public portfolio repository or production URL is created by this build.
 
 ## Contact
 
 - Email: [medinaadrianpanlilio@gmail.com](mailto:medinaadrianpanlilio@gmail.com)
+- LinkedIn: [adrian-alexander-medina-022b8a433](https://www.linkedin.com/in/adrian-alexander-medina-022b8a433/)
 - GitHub: [medinaadrianpanlilio-design](https://github.com/medinaadrianpanlilio-design)

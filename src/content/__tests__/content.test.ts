@@ -1,60 +1,97 @@
+import { existsSync } from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
 import { about } from '../about'
-import { iahbrary } from '../iahbrary'
-import { otherWork } from '../otherWork'
-import { projects } from '../projects'
+import { allProjects, getProject, hobbyProject, projects } from '../projects'
 import { site } from '../site'
-import { skySprout } from '../skysprout'
 
-describe('content contract', () => {
-  it('lists the approved project lineup', () => {
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..')
+const publicFile = (src: string) =>
+  path.join(root, 'public', src.replace(/^\/+/, ''))
+
+describe('project content', () => {
+  it('leads with the three professional projects in the requested order', () => {
     expect(projects.map((project) => project.name)).toEqual([
-      'SkySprout',
-      'Iahbrary',
-      'HealthyaSat',
       'Magilas Gym',
+      'HealthyaSat',
+      'Iahbrary',
     ])
   })
 
-  it('does not include removed projects', () => {
-    expect(JSON.stringify([projects, skySprout, iahbrary, otherWork])).not.toMatch(
-      /Meal Maps|TaskPal/i,
-    )
+  it('keeps SkySprout as a separate hobby at the end', () => {
+    expect(hobbyProject.name).toBe('SkySprout')
+    expect(hobbyProject.hobby).toBe(true)
+    expect(projects).not.toContain(hobbyProject)
+    expect(allProjects.at(-1)).toBe(hobbyProject)
   })
 
-  it('uses the approved contact and live links', () => {
-    expect(site.email).toBe('medinaadrianpanlilio@gmail.com')
-    expect(site.github).toBe('https://github.com/medinaadrianpanlilio-design')
-    expect(site.sourceUrl).toBe(
-      'https://github.com/medinaadrianpanlilio-design/portfolio',
+  it('keeps the professional roles and stacks accurate', () => {
+    const magilas = getProject('magilas')
+    const healthya = getProject('healthya-sat')
+    const iahbrary = getProject('iahbrary')
+
+    expect(magilas?.role).toMatch(/POS/)
+    expect(magilas?.stack).toContain('RBAC')
+    expect(healthya?.role).toMatch(/Backend \/ API/)
+    expect(healthya?.stack).toContain('Docker')
+    expect(iahbrary?.role).toBe('Solo developer')
+    expect(iahbrary?.stack).toContain('Supabase')
+  })
+
+  it('uses the real project links and exposes the SkySprout public source', () => {
+    expect(getProject('magilas')?.links[0].href).toBe('https://magilasgym.com/')
+    expect(getProject('healthya-sat')?.links[0].href).toBe(
+      'https://healthyasat.fit/',
     )
-    expect(skySprout.liveUrl).toBe(
+    expect(getProject('iahbrary')?.links[0].href).toBe(
+      'https://github.com/medinaadrianpanlilio-design/iahbrary',
+    )
+    expect(hobbyProject.links[0].href).toBe(
       'https://www.roblox.com/games/117628058304479',
     )
-    expect(skySprout.handle).toBe('BretRackstar')
+    expect(
+      hobbyProject.links.find((link) => link.label === 'View the code')?.href,
+    ).toBe(
+      'https://github.com/medinaadrianpanlilio-design/skysprout-public',
+    )
   })
 
-  it('keeps the SkySprout loop and retention facts intact', () => {
-    expect(skySprout.loop.map((step) => step.label)).toEqual([
-      'Buy seeds',
-      'Plant',
-      'Grow',
-      'Harvest',
-      'Sell or exhibit',
-      'Earn and expand',
-    ])
-    expect(skySprout.retention.map((panel) => panel.stat)).toEqual([
-      '+100',
-      '12h',
-      '44 min',
-    ])
-    expect(skySprout.measurements).toHaveLength(6)
+  it('has a real local image for every project screen', () => {
+    const sources = new Set(
+      allProjects.flatMap((project) => [
+        project.image.src,
+        ...project.caseStudy.screens.map((screen) => screen.src),
+      ]),
+    )
+
+    for (const source of sources) {
+      expect(existsSync(publicFile(source)), source).toBe(true)
+    }
   })
 
-  it('does not publish private contact or resume data', () => {
-    expect(JSON.stringify([projects, about])).not.toMatch(
-      /\+63|phone number|street address|resume/i,
+  it('only publishes approved contact details', () => {
+    expect(site.email).toBe('medinaadrianpanlilio@gmail.com')
+    expect(site.linkedin).toBe(
+      'https://www.linkedin.com/in/adrian-alexander-medina-022b8a433/',
+    )
+    expect(site.github).toBe(
+      'https://github.com/medinaadrianpanlilio-design',
+    )
+    expect(about.availability).toMatch(/software engineering internships/i)
+    expect(about.capabilities).toHaveLength(4)
+
+    const publicCopy = JSON.stringify({ site, about, projects: allProjects })
+    expect(publicCopy).not.toMatch(/\+63|09\d{2}[\s-]?\d{3}[\s-]?\d{4}/)
+    expect(publicCopy).not.toMatch(/resume|street address/i)
+  })
+
+  it('does not claim retention results for the hobby project', () => {
+    const copy = JSON.stringify(hobbyProject)
+    expect(copy).not.toMatch(/retention rate|D1 retention|DAU/i)
+    expect(hobbyProject.caseStudy.improve.join(' ')).toMatch(
+      /no retention numbers/i,
     )
   })
 })
