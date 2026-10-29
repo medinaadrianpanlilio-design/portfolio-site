@@ -21,6 +21,15 @@ describe('RoomHero', () => {
     ).toBeInTheDocument()
   })
 
+  it('checks for WebGL once, not on every re-render', () => {
+    const webgl = vi.fn(() => false)
+    const { rerender } = render(<RoomHero mode="standin" webgl={webgl} />)
+    rerender(<RoomHero mode="standin" webgl={webgl} />)
+    rerender(<RoomHero mode="standin" webgl={webgl} />)
+
+    expect(webgl).toHaveBeenCalledTimes(1)
+  })
+
   it('falls back to the still image without WebGL', () => {
     render(<RoomHero mode="standin" webgl={() => false} />)
 

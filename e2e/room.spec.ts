@@ -189,3 +189,98 @@ test('axe: no serious or critical issues on / with the room', async ({ page }) =
   )
   expect(serious.map((violation) => violation.id)).toEqual([])
 })
+
+test.describe('review fixes', () => {
+  test.use({
+    viewport: { width: 390, height: 844 },
+    isMobile: true,
+    hasTouch: true,
+  })
+
+  test('phone: swiping on the room scrolls the page', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.locator('canvas[data-view="start"]')).toHaveCount(1)
+
+    // Raw touch events (synthesizeScrollGesture doesn't scroll in headless Chromium).
+    const client = await page.context().newCDPSession(page)
+    const touch = (type: string, y?: number) =>
+      client.send('Input.dispatchTouchEvent', {
+        type,
+        touchPoints: y === undefined ? [] : [{ x: 195, y }],
+      })
+    await touch('touchStart', 650)
+    for (let step = 1; step <= 10; step++) await touch('touchMove', 650 - step * 40)
+    await touch('touchEnd')
+
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(100)
+  })
+})
+
+test('a failed room chunk shows the fallback, not a blank site', async ({ page }) => {
+  await page.route('**/RoomCanvas-*.js', (route) => route.abort())
+  const failed = page.waitForEvent('requestfailed', (request) =>
+    request.url().includes('RoomCanvas-'),
+  )
+  await page.goto('/')
+  await failed
+  // Let the rejected import reach React before checking what survived.
+  await page.waitForTimeout(500)
+
+  await expect(page.locator('[data-room-fallback]')).toBeVisible()
+  await expect(page.getByRole('status')).toHaveCount(0)
+  await expect(
+    page.getByRole('heading', { level: 1, name: /Software.*Systems.*AI/i }),
+  ).toBeAttached()
+})
+
+test('tapping Skills again after scrolling up scrolls down again', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 })
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/')
+  await expect(page.locator('canvas[data-view="start"]')).toHaveCount(1)
+  const skills = page.getByRole('button', { name: label('Skills') })
+
+  await skills.focus()
+  await page.keyboard.press('Enter')
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(500)
+
+  await page.evaluate(() => window.scrollTo(0, 0))
+  await expect(page.locator('canvas[data-view="start"]')).toHaveCount(1)
+  await skills.focus()
+  await page.keyboard.press('Enter')
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(500)
+})
+
+test('hovering the work list keeps the room alive', async ({ page }) => {
+  await page.addInitScript(() => {
+    const counter = window as unknown as { __webgl: number }
+    counter.__webgl = 0
+    const original = HTMLCanvasElement.prototype.getContext
+    HTMLCanvasElement.prototype.getContext = function (
+      this: HTMLCanvasElement,
+      type: string,
+      ...args: unknown[]
+    ) {
+      if (/webgl/.test(type)) counter.__webgl++
+      return original.call(this, type as '2d', ...(args as []))
+    } as typeof original
+  })
+  await page.setViewportSize({ width: 1440, height: 1000 })
+  await page.goto('/')
+  await expect(page.locator('canvas[data-view="start"]')).toHaveCount(1)
+
+  // The selected-work row (its pointer moves re-render HomePage).
+  const row = page
+    .locator('section[aria-labelledby="selected-work-heading"]')
+    .getByRole('link', { name: /MAGILAS/i })
+  await row.scrollIntoViewIfNeeded()
+  const box = (await row.boundingBox())!
+  const count = () =>
+    page.evaluate(() => (window as unknown as { __webgl: number }).__webgl)
+  const before = await count()
+  for (let i = 0; i < 40; i++) {
+    await page.mouse.move(box.x + 20 + i * 8, box.y + box.height / 2 + (i % 2))
+  }
+  // No new WebGL contexts per pointer move (each one can evict the room's).
+  expect(await count()).toBe(before)
+})

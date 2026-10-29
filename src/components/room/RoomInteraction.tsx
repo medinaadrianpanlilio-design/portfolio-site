@@ -1,6 +1,6 @@
 import { CameraControls, CameraControlsImpl } from '@react-three/drei'
 import { useFrame, useThree, type ThreeEvent } from '@react-three/fiber'
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as THREE from 'three'
 
@@ -10,6 +10,7 @@ import { fovForAspect } from './framing'
 import { layoutLabels, type Rect } from './layoutLabels'
 import { navigateTo } from './navigateTo'
 import { useRoomUi } from './roomUi'
+import { runSelect } from './runSelect'
 
 const { ACTION } = CameraControlsImpl
 const OUTLINE = new THREE.MeshBasicMaterial({ color: '#b54718', side: THREE.BackSide })
@@ -132,6 +133,7 @@ export function RoomInteraction({
 }) {
   const controls = useRef<CameraControlsImpl>(null)
   const busy = useRef(false)
+  const [detached] = useState(() => document.createElement('div'))
   const ui = useRoomUi()
   const navigate = useNavigate()
   const camera = useThree((state) => state.camera)
@@ -163,24 +165,30 @@ export function RoomInteraction({
   }, [gl, nodes, portrait])
 
   useEffect(() => {
-    const select = async (name: RoomObjectName) => {
+    const { registerSelect, setHovered } = ui
+    const select = (name: RoomObjectName) => {
       const instance = controls.current
-      if (busy.current || !instance) return
-      busy.current = true
-      setView(gl, name)
-
+      if (!instance) return
       const entry = ROOM_OBJECTS.find((object) => object.name === name)!
-      await lookAt(instance, nodes.cams[name], !prefersReducedMotion())
-      navigateTo(entry.to, navigate, (url) => window.location.assign(url))
-
-      // Same-page sections and the PDF keep this room mounted: return to the
-      // start view so scrolling back up never shows a zoomed-in room.
-      await lookAt(instance, startSpot(nodes, portrait), false)
-      setView(gl, 'start')
-      ui.setHovered(null)
-      busy.current = false
+      return runSelect(busy, {
+        fly: () => {
+          setView(gl, name)
+          return lookAt(instance, nodes.cams[name], !prefersReducedMotion())
+        },
+        open: () =>
+          navigateTo(
+            entry.to,
+            navigate,
+            (url) => window.location.assign(url),
+            (id) => document.getElementById(id)?.scrollIntoView({ block: 'start' }),
+          ),
+        reset: async () => {
+          await lookAt(instance, startSpot(nodes, portrait), false)
+          setView(gl, 'start')
+          setHovered(null)
+        },
+      }).catch((error: unknown) => console.error('[room]', error))
     }
-    const { registerSelect } = ui
     registerSelect((name) => void select(name))
     return () => registerSelect(null)
   }, [gl, navigate, nodes, portrait, ui])
@@ -197,6 +205,9 @@ export function RoomInteraction({
       <CameraControls
         ref={controls}
         makeDefault
+        // Visitors never drag the camera. A detached element keeps camera-controls
+        // from putting `touch-action: none` on the canvas, so phones can swipe past.
+        domElement={detached}
         mouseButtons={{
           left: ACTION.NONE,
           middle: ACTION.NONE,

@@ -10,6 +10,7 @@ import { RoomErrorBoundary } from './RoomErrorBoundary'
 import { RoomFallback } from './RoomFallback'
 import { RoomInteraction } from './RoomInteraction'
 import { RoomLabel } from './RoomLabel'
+import { RoomProgress } from './RoomProgress'
 import styles from './RoomLabel.module.css'
 import type { RoomMode } from './roomMode'
 import { RoomUiContext, type RoomUi } from './roomUi'
@@ -92,6 +93,7 @@ export default function RoomCanvas({ mode }: RoomCanvasProps) {
             </div>
           ))}
         </div>
+        <RoomProgress />
       </RoomUiContext.Provider>
     </RoomErrorBoundary>
   )
