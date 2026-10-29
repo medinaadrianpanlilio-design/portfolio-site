@@ -34,6 +34,15 @@ describe('findRoomNodes', () => {
     ])
   })
 
+  it('picks up the optional portrait start view', () => {
+    const room = createStandInRoom()
+    expect(findRoomNodes(room).portraitStart).toBeDefined()
+
+    room.getObjectByName('cam_start_portrait')!.removeFromParent()
+    room.getObjectByName('cam_start_portrait_target')!.removeFromParent()
+    expect(findRoomNodes(room).portraitStart).toBeUndefined()
+  })
+
   it('uses world positions', () => {
     const room = createStandInRoom()
     const before = findRoomNodes(room).cams.monitor.position.x

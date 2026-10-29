@@ -70,6 +70,9 @@ export function createStandInRoom(): THREE.Group {
   // Camera spots: each looks at its object.
   empty('cam_start', [0.4, 2.4, 3.8])
   empty('cam_start_target', [0, 0.9, -1.2])
+  // Phones: higher and further back so the window and bed stay in the tall frame.
+  empty('cam_start_portrait', [-0.6, 3.6, 4.6])
+  empty('cam_start_portrait_target', [0.45, 0.7, -0.4])
   empty('cam_monitor', [0, 1.15, -0.95])
   empty('cam_monitor_target', [0, 1.08, -1.78])
   empty('cam_system_unit', [0.25, 1.25, -0.95])

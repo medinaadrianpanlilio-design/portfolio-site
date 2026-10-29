@@ -92,7 +92,9 @@
   .overlay {
     right: var(--gutter);
     max-width: none;
-    /* Stay clear of the fixed SiteDock. */
-    bottom: calc(6rem + env(safe-area-inset-bottom, 0px));
+    /* Phones: the empty ceiling is the free space; the dock owns the bottom. */
+    top: calc(var(--gutter) + env(safe-area-inset-top, 0px));
+    bottom: auto;
+    padding: 1rem 1.1rem;
   }
 }

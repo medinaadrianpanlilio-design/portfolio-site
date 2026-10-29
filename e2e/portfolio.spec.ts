@@ -62,7 +62,6 @@ test('desktop: the landing page leads with positioning, skills, stack, and Linke
   await expect(
     page.getByRole('link', { name: 'Home', exact: true }),
   ).toHaveAttribute('aria-current', 'page')
-  await expect(page.locator('canvas')).toHaveCount(0)
   await expectNoHorizontalOverflow(page)
 
   const aiGuide = page.locator('#ai-guide')
@@ -87,6 +86,7 @@ test('desktop: professional work leads and the active project follows scroll', a
 }) => {
   await page.setViewportSize({ width: 1440, height: 1000 })
   await page.goto('/projects')
+  await expect(page.locator('canvas')).toHaveCount(0)
 
   await expect(page).toHaveTitle('Projects — Adrian Medina')
   await expect(

@@ -7,7 +7,7 @@ export function RoomFallback({ loading = false }: { loading?: boolean }) {
   const [stillMissing, setStillMissing] = useState(false)
 
   return (
-    <div className={styles.fallback}>
+    <div className={styles.fallback} data-room-fallback>
       {!stillMissing && (
         <img
           className={styles.still}

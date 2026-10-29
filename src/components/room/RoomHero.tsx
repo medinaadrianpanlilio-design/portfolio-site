@@ -38,7 +38,7 @@ export function RoomHero({
         <RoomFallback />
       )}
 
-      <div className={styles.overlay}>
+      <div className={styles.overlay} data-room-overlay>
         <p className={styles.name}>{site.fullName}</p>
         <p className={styles.role}>{site.role}</p>
         <button className={styles.skip} type="button" onClick={skipToWork}>

@@ -1,0 +1,91 @@
+.layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.anchor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+
+/* Until the scene places a label, it has no position and no handler yet. */
+.anchor:not([data-placed]) {
+  visibility: hidden;
+}
+
+.label {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  padding: 0 0.85rem 0 0.7rem;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 8px 22px rgb(40 24 12 / 0.25);
+  cursor: pointer;
+  transition:
+    opacity var(--transition),
+    transform var(--transition);
+}
+
+.label:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* Mouse and trackpad: labels appear on hover or keyboard focus. */
+@media (hover: hover) {
+  .label {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(4px);
+  }
+
+  .label[data-active],
+  .label:focus-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+}
+
+/* Touch: every label is always visible, with a pulsing dot. */
+@media (hover: none) {
+  .dot {
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+}
+
+@media (hover: none) and (prefers-reduced-motion: reduce) {
+  .dot {
+    animation: none;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(181 71 24 / 0.55);
+  }
+  50% {
+    box-shadow: 0 0 0 0.45rem rgb(181 71 24 / 0);
+  }
+}

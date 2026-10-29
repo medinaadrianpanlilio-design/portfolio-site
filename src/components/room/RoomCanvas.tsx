@@ -1,14 +1,18 @@
 import { useGLTF } from '@react-three/drei'
-import { Canvas, useThree } from '@react-three/fiber'
-import { useLayoutEffect, useMemo } from 'react'
+import { Canvas } from '@react-three/fiber'
+import { useMemo, useRef, useState } from 'react'
 import type * as THREE from 'three'
 
-import { ROOM_MODEL_URL } from '../../content/room'
+import { ROOM_MODEL_URL, ROOM_OBJECTS, type RoomObjectName } from '../../content/room'
 import { applyBakedMaterials } from './applyBakedMaterials'
 import { findRoomNodes } from './findRoomNodes'
 import { RoomErrorBoundary } from './RoomErrorBoundary'
 import { RoomFallback } from './RoomFallback'
+import { RoomInteraction } from './RoomInteraction'
+import { RoomLabel } from './RoomLabel'
+import styles from './RoomLabel.module.css'
 import type { RoomMode } from './roomMode'
+import { RoomUiContext, type RoomUi } from './roomUi'
 import { createStandInRoom } from './StandInRoom'
 
 export type RoomCanvasProps = {
@@ -17,16 +21,7 @@ export type RoomCanvasProps = {
 
 function RoomStage({ root }: { root: THREE.Object3D }) {
   const nodes = useMemo(() => findRoomNodes(root), [root])
-  const camera = useThree((state) => state.camera)
-  const invalidate = useThree((state) => state.invalidate)
-
-  useLayoutEffect(() => {
-    camera.position.copy(nodes.cams.start.position)
-    camera.lookAt(nodes.cams.start.target)
-    invalidate()
-  }, [camera, invalidate, nodes])
-
-  return <primitive object={root} />
+  return <RoomInteraction root={root} nodes={nodes} />
 }
 
 function ModelRoom() {
@@ -51,17 +46,53 @@ function StandInRoom() {
 }
 
 export default function RoomCanvas({ mode }: RoomCanvasProps) {
+  const [hovered, setHovered] = useState<RoomObjectName | null>(null)
+  const select = useRef<((name: RoomObjectName) => void) | null>(null)
+  const labels = useRef<RoomUi['labels']['current']>({})
+  const ui = useMemo<RoomUi>(
+    () => ({
+      hovered,
+      setHovered,
+      select: (name) => select.current?.(name),
+      registerSelect: (next) => {
+        select.current = next
+      },
+      labels,
+    }),
+    [hovered],
+  )
+
   return (
     <RoomErrorBoundary fallback={<RoomFallback />}>
-      <Canvas
-        dpr={[1, 1.5]}
-        frameloop="demand"
-        shadows={false}
-        camera={{ fov: 50, near: 0.05, far: 50 }}
-        gl={{ antialias: true }}
-      >
-        {mode === 'model' ? <ModelRoom /> : <StandInRoom />}
-      </Canvas>
+      <RoomUiContext.Provider value={ui}>
+        <Canvas
+          dpr={[1, 1.5]}
+          frameloop="demand"
+          shadows={false}
+          camera={{ fov: 50, near: 0.05, far: 50 }}
+          gl={{ antialias: true }}
+        >
+          {mode === 'model' ? <ModelRoom /> : <StandInRoom />}
+        </Canvas>
+        <div className={styles.layer}>
+          {ROOM_OBJECTS.map((entry) => (
+            <div
+              key={entry.name}
+              className={styles.anchor}
+              ref={(element) => {
+                labels.current[entry.name] = element
+              }}
+            >
+              <RoomLabel
+                label={entry.label}
+                active={hovered === entry.name}
+                onSelect={() => ui.select(entry.name)}
+                onHover={(over) => setHovered(over ? entry.name : null)}
+              />
+            </div>
+          ))}
+        </div>
+      </RoomUiContext.Provider>
     </RoomErrorBoundary>
   )
 }

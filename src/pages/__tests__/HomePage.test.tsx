@@ -17,12 +17,13 @@ describe('HomePage', () => {
   it('leads with Adrian and the software/systems/AI positioning', () => {
     renderPage()
 
+    // tabIndex -1 lets the room's "Skip to my work" move focus here.
     expect(
       screen.getByRole('heading', {
         level: 1,
         name: /Software.*Systems.*AI/i,
       }),
-    ).toBeInTheDocument()
+    ).toHaveAttribute('tabindex', '-1')
     expect(screen.getByText('Adrian Medina')).toBeInTheDocument()
     expect(
       screen.getByRole('complementary', { name: /right now summary/i }),

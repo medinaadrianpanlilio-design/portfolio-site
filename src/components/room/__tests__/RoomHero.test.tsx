@@ -1,10 +1,7 @@
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { MemoryRouter } from 'react-router-dom'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
 import { site } from '../../../content/site'
-import { HomePage } from '../../../pages/HomePage'
 import { RoomHero } from '../RoomHero'
 
 describe('RoomHero', () => {
@@ -31,20 +28,25 @@ describe('RoomHero', () => {
     expect(document.querySelector('canvas')).toBeNull()
   })
 
-  it('skip moves focus to the landing headline', async () => {
+  it('skip moves focus to the landing headline', () => {
     const scrollIntoView = vi.fn()
     Element.prototype.scrollIntoView = scrollIntoView
 
     render(
-      <MemoryRouter>
-        <HomePage />
-      </MemoryRouter>,
+      <>
+        <RoomHero mode="standin" webgl={() => false} />
+        <section>
+          <h1 id="home-title" tabIndex={-1}>
+            Software. Systems. AI.
+          </h1>
+        </section>
+      </>,
     )
-    await userEvent.click(screen.getByRole('button', { name: 'Skip to my work' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Skip to my work' }))
 
     expect(scrollIntoView).toHaveBeenCalled()
     expect(document.activeElement).toBe(
-      screen.getByRole('heading', { level: 1, name: /Software.*Systems.*AI/i }),
+      screen.getByRole('heading', { level: 1 }),
     )
   })
 })

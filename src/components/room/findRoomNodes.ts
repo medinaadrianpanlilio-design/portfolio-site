@@ -17,6 +17,8 @@ export type RoomCamSpot = { position: THREE.Vector3; target: THREE.Vector3 }
 export type RoomNodes = {
   meshes: Record<RoomObjectName, THREE.Object3D>
   cams: Record<'start' | RoomObjectName, RoomCamSpot>
+  /** Optional `cam_start_portrait` (+ `_target`): a start view framed for phones. */
+  portraitStart?: RoomCamSpot
 }
 
 /** Resolve the Blender naming contract against a loaded scene. */
@@ -39,5 +41,8 @@ export function findRoomNodes(root: THREE.Object3D): RoomNodes {
     meshes[name] = get(name)
     cams[name] = spot(name)
   }
-  return { meshes, cams }
+  const hasPortrait =
+    root.getObjectByName('cam_start_portrait') &&
+    root.getObjectByName('cam_start_portrait_target')
+  return { meshes, cams, portraitStart: hasPortrait ? spot('start_portrait') : undefined }
 }
