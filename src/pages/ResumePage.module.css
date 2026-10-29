@@ -29,6 +29,11 @@
   padding-left: 1.1em;
 }
 
+/* global.css resets list-style on li */
+.project li {
+  list-style: disc;
+}
+
 .header {
   padding-bottom: 3mm;
   border-bottom: 1px solid var(--ink);
@@ -70,9 +75,8 @@
   text-transform: uppercase;
 }
 
-.skills {
-  list-style: none;
-  padding-left: 0 !important;
+.resume .skills {
+  padding-left: 0;
 }
 
 .project + .project {

@@ -4,7 +4,8 @@ import { site } from '../content/site'
 import { usePageTitle } from '../hooks/useDocumentTitle'
 import styles from './ResumePage.module.css'
 
-const bareUrl = (href: string) => href.replace(/^https:\/\/(www\.)?/, '')
+const bareUrl = (href: string) =>
+  href.replace(/^https:\/\/(www\.)?/, '').replace(/\/$/, '')
 
 export function ResumePage() {
   usePageTitle('Adrian Medina — Resume')

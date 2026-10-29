@@ -7,6 +7,10 @@ import { allProjects } from '../../content/projects'
 import { site } from '../../content/site'
 import { ResumePage } from '../ResumePage'
 
+// Resume link text is the URL without scheme, www. or trailing slash.
+const bare = (href: string) =>
+  href.replace(/^https:\/\/(www\.)?/, '').replace(/\/$/, '')
+
 function renderPage() {
   return render(
     <MemoryRouter>
@@ -31,11 +35,11 @@ describe('ResumePage', () => {
     )
     expect(
       screen.getByRole('link', {
-        name: site.linkedin.replace(/^https:\/\/(www\.)?/, ''),
+        name: bare(site.linkedin),
       }),
     ).toHaveAttribute('href', site.linkedin)
     expect(
-      screen.getByRole('link', { name: site.github.replace(/^https:\/\//, '') }),
+      screen.getByRole('link', { name: bare(site.github) }),
     ).toHaveAttribute('href', site.github)
   })
 
@@ -70,9 +74,9 @@ describe('ResumePage', () => {
       for (const bullet of project.caseStudy.built) {
         expect(within(article).getByText(bullet)).toBeInTheDocument()
       }
-      expect(article.textContent).toContain(
-        project.links[0].href.replace(/^https:\/\/(www\.)?/, ''),
-      )
+      expect(
+        within(article).getByRole('link', { name: bare(project.links[0].href) }),
+      ).toHaveAttribute('href', project.links[0].href)
     }
   })
 
