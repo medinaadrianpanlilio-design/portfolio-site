@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { AiGuide } from '../components/ai/AiGuide'
 import { HoverPeek } from '../components/home/HoverPeek'
 import { RightNow } from '../components/home/RightNow'
+import { RoomHero } from '../components/room/RoomHero'
 import { CopyEmail } from '../components/ui/CopyEmail'
 import { CtaLink } from '../components/ui/CtaLink'
 import { StackTiles } from '../components/ui/StackTiles'
@@ -32,6 +33,8 @@ export function HomePage() {
 
   return (
     <main className={styles.home}>
+      <RoomHero />
+
       <section className={styles.hero} aria-labelledby="home-title">
         <div className={`page ${styles.heroGrid}`}>
           <div className={styles.heroContent}>
@@ -40,7 +43,11 @@ export function HomePage() {
               <p className="label">Software engineer in progress</p>
             </div>
 
-            <h1 className={`${styles.heroTitle} display`} id="home-title">
+            <h1
+              className={`${styles.heroTitle} display`}
+              id="home-title"
+              tabIndex={-1}
+            >
               <span className="sr-only">{site.name} — </span>
               <span>Software.</span>{' '}
               <span>Systems.</span>{' '}
