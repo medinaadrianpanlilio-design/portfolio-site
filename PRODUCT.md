@@ -29,11 +29,11 @@ The site must be fast, readable on a phone, and visually specific without becomi
 
 ## Non-goals
 
-- A 3D game experience or game-first hero.
+- A game-first hero. The 3D room on `/` is a welcome only; the work is never behind it.
 - A centralized “game” narrative that outranks the professional work.
 - A CMS, auth, blog, contact form, or account system. The AI guide endpoint is the only server-side component.
 - Invented retention metrics, testimonials, player counts, or client claims.
-- Publishing private repository data, a phone number, a street address, or the outdated résumé.
+- Publishing private repository data, a phone number, a street address, or any résumé other than the one generated from this site (`/resume`).
 - Copying the reference deck’s template or imagery.
 
 ## Approved links
@@ -46,6 +46,7 @@ The site must be fast, readable on a phone, and visually specific without becomi
 - SkySprout code: https://github.com/medinaadrianpanlilio-design/skysprout-public
 - GitHub: https://github.com/medinaadrianpanlilio-design
 - Email: medinaadrianpanlilio@gmail.com
+- Resume: /Adrian-Medina-Resume.pdf (generated from `/resume`)
 
 ## Honesty
 

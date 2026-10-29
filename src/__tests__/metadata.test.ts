@@ -20,7 +20,7 @@ describe('document shell and deployment config', () => {
     )
   })
 
-  it('does not ship the old 3D runtime', () => {
+  it('ships 3D only as the room runtime', () => {
     const pkg = JSON.parse(read('package.json')) as {
       dependencies: Record<string, string>
       devDependencies: Record<string, string>
@@ -30,9 +30,10 @@ describe('document shell and deployment config', () => {
       ...pkg.devDependencies,
     }
 
-    expect(dependencies).not.toHaveProperty('three')
-    expect(dependencies).not.toHaveProperty('@react-three/fiber')
-    expect(dependencies).not.toHaveProperty('@react-three/drei')
+    expect(dependencies).toHaveProperty('three')
+    expect(dependencies).toHaveProperty('@react-three/drei')
+    // R3F v9 is the React 19 line.
+    expect(dependencies['@react-three/fiber']).toMatch(/^\^?9\./)
     expect(dependencies).not.toHaveProperty('framer-motion')
     expect(dependencies).toHaveProperty('react-router-dom')
     expect(dependencies).toHaveProperty('@fontsource/archivo-black')

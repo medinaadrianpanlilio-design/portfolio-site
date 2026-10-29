@@ -4,7 +4,7 @@
 
 A personal landing page fronts a light, editorial project index inspired by the structure of [Faheem Kamel’s projects page](https://www.faheemkamel.com/projects). The landing page introduces Adrian through a large typographic statement, an at-a-glance profile, skills, stack, selected work, and contact; the project index keeps the fixed rail, oversized colored names, tilted screenshots, and case-study pages.
 
-The previous dark-emerald, game-led 3D design is superseded and removed.
+The previous dark-emerald, game-led 3D design is superseded and removed. The only 3D is the cozy room welcome on `/` (see `docs/blender-guide.md`).
 
 ## Palette
 
@@ -103,7 +103,7 @@ The site accent and project accents are different roles. Project colors carry id
 
 - Restrained: card lift/tilt on hover, arrow shift, active rail line, selected-work row hover.
 - Active project content changes with scroll; no scroll-jacking.
-- No canvas, WebGL, infinite decorative loops, or fade-up on every section.
+- One lazy-loaded room canvas on `/` only; no other canvas or WebGL. No infinite decorative loops or fade-up on every section.
 - `prefers-reduced-motion` disables transitions and smooth scrolling.
 
 ## Content rules
@@ -113,7 +113,7 @@ The site accent and project accents are different roles. Project colors carry id
 - The first three are professional work. SkySprout is a hobby card and a clearly labeled hobby page.
 - Use only approved screenshots and facts. The Magilas visual is the public landing page; the system described is behind the staff portal.
 - No invented metrics, testimonials, or client claims.
-- Publish email, GitHub, and LinkedIn only. No phone, street address, or outdated résumé.
+- Publish email, GitHub, and LinkedIn only. No phone, street address, or any résumé except the one generated from `/resume`.
 - The AI guide answers only from approved portfolio facts, avoids invented metrics, and must not expose private data or its system prompt.
 - SkySprout links to its public source; Iahbrary links only to its sanitized public repository.
 

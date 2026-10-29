@@ -4,7 +4,7 @@ A personal landing page and project-first portfolio for software-engineering int
 
 The landing page also includes a grounded AI portfolio guide. It answers questions about the approved work, stack, and availability; the live model is optional and runs through a small server-side endpoint.
 
-This replaces the previous game-led 3D portfolio. The 3D runtime and its dependencies are gone.
+This replaces the previous game-led 3D portfolio. The only 3D left is an optional cozy room welcome at the top of `/` (Adrian's room, modeled in Blender), lazy-loaded and switched by `VITE_ROOM`.
 
 ## Pages
 
@@ -17,6 +17,7 @@ This replaces the previous game-led 3D portfolio. The 3D runtime and its depende
 | `/projects/iahbrary` | Iahbrary: Expo/TypeScript/Supabase, owner-only RLS, offline queue, public code |
 | `/projects/skysprout` | Roblox hobby case study: live game and public source |
 | `/about` | Deeper introduction, skills, education, approved contact details |
+| `/resume` | One-page résumé rendered from `src/content/*`; printed to `public/Adrian-Medina-Resume.pdf` by `npm run resume` |
 
 The fixed desktop rail is **Home / Projects / About / Skills / Contact**, with a direct LinkedIn link at the bottom. The mobile menu carries the same navigation plus LinkedIn, GitHub, and email.
 
@@ -40,7 +41,7 @@ The fixed desktop rail is **Home / Projects / About / Skills / Contact**, with a
 - Sharp for the responsive image pipeline
 - Vercel for static deployment, API functions, and an SPA rewrite
 
-No CMS, auth, contact form, or 3D runtime. The AI guide endpoint is the only server-side piece.
+No CMS, auth, or contact form. three / React Three Fiber v9 / drei load only in the lazy room chunk on `/`. The AI guide endpoint is the only server-side piece.
 
 ## Run locally
 
@@ -53,6 +54,32 @@ npm run dev
 ```
 
 The optimized images are generated into `public/images/` from the source captures in `assets/source/`. Run `npm run images` whenever those sources change.
+
+### Résumé
+
+The résumé is generated from the same content as the site, so the two never drift. With `npm run dev` running:
+
+```bash
+npm run resume
+```
+
+It writes `public/Adrian-Medina-Resume.pdf` and fails if the résumé no longer fits on one page.
+
+### The 3D room
+
+`VITE_ROOM` controls the room welcome on `/`:
+
+| Value | Behavior |
+| --- | --- |
+| `off` | No room; the landing page starts as before. Default for production builds. |
+| `standin` | A code-built box room with the same object names. Default in dev; used by the E2E build (`.env.e2e`). |
+| `model` | Loads `public/models/room.glb`, Adrian's Blender room. |
+
+Production stays `off` until the Blender room is finished. To prepare an export, follow `docs/blender-guide.md`, then:
+
+```bash
+npm run room -- path/to/room.glb
+```
 
 For the production build:
 
@@ -120,7 +147,7 @@ The current suite covers:
 - The HealthyaSat screenshot is the real extension over a Balita article.
 - Iahbrary links to its sanitized public repository; private data and credentials are not published.
 - SkySprout links to its public source at [skysprout-public](https://github.com/medinaadrianpanlilio-design/skysprout-public). There are no fabricated retention metrics or player counts.
-- Publish the approved email, GitHub, LinkedIn, and project links only. No phone number, street address, or outdated résumé.
+- Publish the approved email, GitHub, LinkedIn, and project links only. No phone number, street address, or any résumé except the one generated from `/resume`.
 - Do not link to the Magilas staff portal as a public case-study demo; it requires credentials.
 - The AI guide is instructed to answer only from approved portfolio facts, avoid invented metrics, and never expose private data or the system prompt.
 
