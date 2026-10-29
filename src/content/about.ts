@@ -49,4 +49,12 @@ export const about = {
   ],
   education:
     'BS Computer Science, Pampanga State University (formerly Don Honorio Ventura State University). Expected 2027. Dean’s Lister, 1st–3rd year.',
+  experience: [
+    {
+      title: 'Work Immersion',
+      org: 'Municipality of Sta. Ana',
+      period: 'Senior High School',
+      body: 'Supported basic administrative and document-printing tasks.',
+    },
+  ],
 } as const

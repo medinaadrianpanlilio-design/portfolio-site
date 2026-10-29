@@ -1,10 +1,12 @@
 export const site = {
   name: 'Adrian Medina',
+  fullName: 'Adrian Alexander Medina',
   role: 'Computer Science student · Software Engineer & AI Integrator',
   email: 'medinaadrianpanlilio@gmail.com',
   linkedin: 'https://www.linkedin.com/in/adrian-alexander-medina-022b8a433/',
   github: 'https://github.com/medinaadrianpanlilio-design',
   location: 'Pampanga, Philippines',
+  resumePdf: '/Adrian-Medina-Resume.pdf',
 } as const
 
 export interface StackItem {

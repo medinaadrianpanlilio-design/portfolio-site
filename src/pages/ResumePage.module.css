@@ -1,0 +1,120 @@
+@page {
+  size: A4;
+  margin: 12mm;
+}
+
+.resume {
+  box-sizing: border-box;
+  max-width: 210mm;
+  margin: 0 auto;
+  padding: 12mm;
+  background: #ffffff;
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: 9.5pt;
+  line-height: 1.38;
+}
+
+.resume a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.resume p,
+.resume ul {
+  margin: 0;
+}
+
+.resume ul {
+  padding-left: 1.1em;
+}
+
+.header {
+  padding-bottom: 3mm;
+  border-bottom: 1px solid var(--ink);
+}
+
+.name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 20pt;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.role {
+  margin-top: 1mm;
+  font-weight: 600;
+}
+
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 4mm;
+  margin-top: 1mm;
+  color: var(--muted-strong);
+}
+
+.section {
+  margin-top: 3.5mm;
+}
+
+.section h2 {
+  margin: 0 0 1.2mm;
+  font-family: var(--font-display);
+  font-size: 10.5pt;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.skills {
+  list-style: none;
+  padding-left: 0 !important;
+}
+
+.project + .project {
+  margin-top: 2.4mm;
+}
+
+.projectHead {
+  display: flex;
+  align-items: baseline;
+  gap: 2mm;
+}
+
+.projectHead h3 {
+  margin: 0;
+  font-size: 10pt;
+  font-weight: 700;
+}
+
+.tag {
+  padding: 0 1.5mm;
+  border: 1px solid var(--muted);
+  border-radius: 1mm;
+  color: var(--muted-strong);
+  font-size: 7.5pt;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.meta {
+  color: var(--muted-strong);
+}
+
+@media screen and (max-width: 640px) {
+  .resume {
+    padding: 1.25rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media print {
+  .resume {
+    max-width: none;
+    padding: 0;
+  }
+}

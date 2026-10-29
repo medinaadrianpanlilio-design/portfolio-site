@@ -81,10 +81,14 @@ describe('project content', () => {
     )
     expect(about.availability).toMatch(/software engineering internships/i)
     expect(about.capabilities).toHaveLength(4)
+    expect(about.experience).toHaveLength(1)
 
     const publicCopy = JSON.stringify({ site, about, projects: allProjects })
     expect(publicCopy).not.toMatch(/\+63|09\d{2}[\s-]?\d{3}[\s-]?\d{4}/)
-    expect(publicCopy).not.toMatch(/resume|street address/i)
+    expect(publicCopy).not.toMatch(/street address/i)
+    // The only résumé the site publishes is the one generated from this content.
+    expect(site.resumePdf).toBe('/Adrian-Medina-Resume.pdf')
+    expect(publicCopy.match(/resume[^"]*/gi)).toEqual(['resumePdf', 'Resume.pdf'])
   })
 
   it('does not claim retention results for the hobby project', () => {

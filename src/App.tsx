@@ -6,10 +6,12 @@ import { HomePage } from './pages/HomePage'
 import { NotFoundPage } from './pages/NotFoundPage'
 import { ProjectDetailPage } from './pages/ProjectDetailPage'
 import { ProjectsPage } from './pages/ProjectsPage'
+import { ResumePage } from './pages/ResumePage'
 
 export default function App() {
   return (
     <Routes>
+      <Route path="resume" element={<ResumePage />} />
       <Route element={<SiteShell />}>
         <Route index element={<HomePage />} />
         <Route path="projects" element={<ProjectsPage />} />
