@@ -1,7 +1,7 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
 
-// Runs against the stand-in room (`vite build --mode e2e`, see .env.e2e).
+// Runs against Adrian's Blender room (`vite build --mode e2e`, see .env.e2e).
 
 const label = (name: string) =>
   new RegExp(`^${name}: open from the room$`)

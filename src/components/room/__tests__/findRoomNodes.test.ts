@@ -75,6 +75,8 @@ describe('applyBakedMaterials', () => {
     expect(baked.material).toBeInstanceOf(THREE.MeshBasicMaterial)
     expect((baked.material as THREE.MeshBasicMaterial).map).toBe(map)
     expect(map.colorSpace).toBe(THREE.SRGBColorSpace)
+    // The bake is already display-ready; tone mapping it again washes it out.
+    expect((baked.material as THREE.MeshBasicMaterial).toneMapped).toBe(false)
     expect(plain.material).toBe(plainMaterial)
   })
 })

@@ -72,8 +72,8 @@ It writes `public/Adrian-Medina-Resume.pdf` and fails if the résumé no longer 
 | Value | Behavior |
 | --- | --- |
 | `off` | No room; the landing page starts as before. Default for production builds. |
-| `standin` | A code-built box room with the same object names. Default in dev; used by the E2E build (`.env.e2e`). |
-| `model` | Loads `public/models/room.glb`, Adrian's Blender room. |
+| `standin` | A code-built box room with the same object names. Default in dev. |
+| `model` | Loads `public/models/room.glb`, Adrian's Blender room. Used by the E2E build (`.env.e2e`). |
 
 Production stays `off` until the Blender room is finished. To prepare an export, follow `docs/blender-guide.md`, then:
 

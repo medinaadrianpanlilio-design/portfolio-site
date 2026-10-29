@@ -10,6 +10,7 @@ export function applyBakedMaterials(root: THREE.Object3D): void {
     const map = (object.material as THREE.MeshStandardMaterial).map
     if (!map) return
     map.colorSpace = THREE.SRGBColorSpace
-    object.material = new THREE.MeshBasicMaterial({ map })
+    // toneMapped: false. The bake already went through Blender's view transform.
+    object.material = new THREE.MeshBasicMaterial({ map, toneMapped: false })
   })
 }
