@@ -36,6 +36,23 @@ describe('gesture gate', () => {
   it('wheel up goes backward', () => {
     expect(createGestureGate().wheel(-40, 0)).toBe(-1)
   })
+  it('reports whether it is closed', () => {
+    const gate = createGestureGate()
+    expect(gate.closed(0)).toBe(false)
+    gate.busyUntil(1000)
+    expect(gate.closed(999)).toBe(true)
+    expect(gate.closed(1000)).toBe(false)
+  })
+  it('a wheel stream the tour let pass keeps it closed until the stream goes quiet', () => {
+    const gate = createGestureGate()
+    gate.passed(0)
+    gate.passed(100)
+    expect(gate.closed(100 + QUIET_MS - 1)).toBe(true)
+    // Still the same stream once the room is back: swallowed, and the quiet window restarts.
+    expect(gate.wheel(-120, 200)).toBe(0)
+    expect(gate.wheel(-120, 200 + QUIET_MS - 1)).toBe(0)
+    expect(gate.wheel(-120, 200 + 2 * QUIET_MS)).toBe(-1)
+  })
   it('reset clears the sum and the closed state', () => {
     const gate = createGestureGate()
     gate.busyUntil(5000)

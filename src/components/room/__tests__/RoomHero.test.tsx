@@ -111,7 +111,10 @@ describe('RoomHero', () => {
 
     const room = screen.getByRole('region', { name: "Adrian's room" })
     expect(room).toHaveAttribute('data-room-tour', 'scroll')
-    expect(room).not.toHaveClass(styles.track)
+    // No track around the room: the section is unstyled and holds only the one-screen stage.
+    expect(room).not.toHaveAttribute('class')
+    expect(room.children).toHaveLength(1)
+    expect(room.firstElementChild!.className).toBe(styles.room)
   })
 
   it('a wheel flick shows the projects preview after the glide', () => {

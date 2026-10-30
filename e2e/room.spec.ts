@@ -41,6 +41,15 @@ async function flick(page: Page, deltaY: number) {
   await page.mouse.wheel(0, deltaY)
 }
 
+/** A trackpad flick's momentum: a stream of small wheel events, 16 ms apart. */
+async function burst(page: Page, deltaY: number, count: number) {
+  await page.mouse.move(720, 500)
+  for (let i = 0; i < count; i++) {
+    await page.mouse.wheel(0, deltaY)
+    await page.waitForTimeout(16)
+  }
+}
+
 /**
  * The view names the stop from the glide's last 10%; let the glide end and the
  * gate's quiet gap pass before the next gesture, the way a reader pauses.
@@ -189,11 +198,7 @@ test.describe('scroll tour (desktop)', () => {
   test('a momentum burst moves one stop', async ({ page }) => {
     await page.goto('/')
     await expect(view(page, 'start')).toHaveCount(1)
-    await page.mouse.move(720, 500)
-    for (let i = 0; i < 40; i++) {
-      await page.mouse.wheel(0, 60)
-      await page.waitForTimeout(16)
-    }
+    await burst(page, 60, 40)
     await expect(view(page, 'monitor')).toHaveCount(1)
     await page.waitForTimeout(1500)
     await expect(view(page, 'monitor')).toHaveCount(1)
@@ -219,6 +224,51 @@ test.describe('scroll tour (desktop)', () => {
     expect(await scrollY(page)).toBe(0)
   })
 
+  test('momentum that reaches the bed does not scroll the page until it goes quiet', async ({
+    page,
+  }) => {
+    await page.goto('/')
+    await expect(view(page, 'start')).toHaveCount(1)
+    for (const stop of STOPS.slice(0, 3)) {
+      await flick(page, 120)
+      await expect(view(page, stop.object)).toHaveCount(1)
+      await arrived(page)
+    }
+
+    await burst(page, 60, 40)
+    await expect(view(page, 'bed')).toHaveCount(1)
+    expect(await scrollY(page)).toBe(0)
+    await page.waitForTimeout(600)
+    expect(await scrollY(page)).toBe(0)
+    await expect(preview(page, 'bed')).toBeVisible()
+
+    // A fresh flick, once the stream is quiet, releases the page.
+    await flick(page, 120)
+    await expect.poll(() => scrollY(page)).toBeGreaterThan(SCROLLED)
+  })
+
+  test('wheeling back up to the room stops at the bed', async ({ page }) => {
+    await page.goto('/')
+    await expect(view(page, 'start')).toHaveCount(1)
+    for (const stop of STOPS) {
+      await flick(page, 120)
+      await expect(view(page, stop.object)).toHaveCount(1)
+      await arrived(page)
+    }
+    await flick(page, 120)
+    await page.mouse.wheel(0, 400)
+    await expect.poll(() => scrollY(page)).toBeGreaterThan(400)
+    await page.waitForTimeout(400)
+
+    // One stream, more than enough to reach the top and keep going.
+    await burst(page, -60, 25)
+    await expect.poll(() => scrollY(page)).toBe(0)
+    await expect(view(page, 'bed')).toHaveCount(1)
+    await page.waitForTimeout(1500)
+    await expect(view(page, 'bed')).toHaveCount(1)
+    await expect(preview(page, 'bed')).toBeVisible()
+  })
+
   test('skip to my work, then back to the top shows start', async ({ page }) => {
     await page.goto('/')
     await expect(view(page, 'start')).toHaveCount(1)
@@ -235,14 +285,11 @@ test.describe('scroll tour (desktop)', () => {
     await expect(view(page, 'monitor')).toHaveCount(1)
   })
 
-  test('reload mid-page does not capture', async ({ page }) => {
+  // Also covers a restored scroll position: the site's own scroll reset lands a
+  // reload at the top, so the restore is played here directly.
+  test('below the room, the wheel scrolls natively', async ({ page }) => {
     await page.goto('/')
     await expect(view(page, 'start')).toHaveCount(1)
-    await page.evaluate(() => window.scrollTo({ top: 2000, behavior: 'instant' }))
-    await page.reload()
-    await expect(page.locator('canvas[data-view]')).toHaveCount(1)
-    // The site's own scroll reset lands a reload at the top; put it back the way a
-    // browser's scroll restore would, before any gesture.
     await page.evaluate(() => window.scrollTo({ top: 2000, behavior: 'instant' }))
     await flick(page, 120)
     await expect.poll(() => scrollY(page)).toBeGreaterThan(2000)

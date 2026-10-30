@@ -16,6 +16,10 @@ export type GestureGate = {
   swipe(startY: number, endY: number, now: number): Step
   /** Keep the gate closed until `time` (the caller's glide end). */
   busyUntil(time: number): void
+  /** A wheel event the tour let through (the page scrolled): wait for its stream to go quiet. */
+  passed(now: number): void
+  /** Closed: a glide is running, or the wheel hasn't been quiet for QUIET_MS since. */
+  closed(now: number): boolean
   reset(): void
 }
 
@@ -53,6 +57,11 @@ export function createGestureGate(): GestureGate {
       busy = time
       sum = 0
     },
+    passed(now) {
+      lastClosedWheel = now
+      sum = 0
+    },
+    closed,
     reset() {
       sum = 0
       busy = 0

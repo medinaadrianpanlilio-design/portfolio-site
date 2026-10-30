@@ -94,7 +94,8 @@ export function RoomTour({ nameCard, children }: { nameCard: ReactNode; children
       let last: number | null = null
       const tick = () => {
         const frame = tourFrame(motion.current, performance.now())
-        section.dataset.roomPhase = frame.view === 'travel' ? 'travel' : 'hold'
+        const phase = frame.view === 'travel' ? 'travel' : 'hold'
+        if (section.dataset.roomPhase !== phase) section.dataset.roomPhase = phase
         if (frame.shown !== last) {
           last = frame.shown
           setShown(frame.shown)
@@ -130,11 +131,20 @@ export function RoomTour({ nameCard, children }: { nameCard: ReactNode; children
       // ctrl + wheel is a trackpad pinch: the browser zooms.
       if (event.ctrlKey || !engaged() || typing(event.target)) return
       const delta = wheelPixels(event)
+      const now = performance.now()
+      // A closed gate swallows everything, even past the bed: the tail of the
+      // flick that arrived there must not scroll the page away from its card.
+      const closed = gate.closed(now)
       // Fed even mid-glide, so trackpad momentum keeps the gate closed.
-      const direction = gate.wheel(delta, performance.now())
+      const direction = gate.wheel(delta, now)
       const busy = gliding()
-      if (busy || capturing(direction || delta)) event.preventDefault()
+      if (closed || busy || capturing(direction || delta)) event.preventDefault()
       if (direction !== 0 && !busy) go(direction)
+    }
+    // Scrolling the page back up: the stream that reaches the top must not
+    // carry on into a glide, so the room waits for it to go quiet.
+    const pageWheel = () => {
+      if (!engaged()) gate.passed(performance.now())
     }
 
     let startY: number | null = null
@@ -144,7 +154,8 @@ export function RoomTour({ nameCard, children }: { nameCard: ReactNode; children
     const touchMove = (event: TouchEvent) => {
       // Two fingers are a pinch: leave it to the browser.
       if (startY === null || event.touches.length !== 1 || !engaged()) return
-      if (gliding() || capturing(startY - event.touches[0].clientY)) event.preventDefault()
+      const closed = gate.closed(performance.now())
+      if (closed || gliding() || capturing(startY - event.touches[0].clientY)) event.preventDefault()
     }
     const touchEnd = (event: TouchEvent) => {
       const from = startY
@@ -178,6 +189,7 @@ export function RoomTour({ nameCard, children }: { nameCard: ReactNode; children
     section.addEventListener('touchmove', touchMove, { passive: false })
     section.addEventListener('touchend', touchEnd)
     section.addEventListener('touchcancel', touchCancel)
+    window.addEventListener('wheel', pageWheel, { passive: true })
     window.addEventListener('keydown', key)
     return () => {
       section.removeEventListener('wheel', wheel)
@@ -185,6 +197,7 @@ export function RoomTour({ nameCard, children }: { nameCard: ReactNode; children
       section.removeEventListener('touchmove', touchMove)
       section.removeEventListener('touchend', touchEnd)
       section.removeEventListener('touchcancel', touchCancel)
+      window.removeEventListener('wheel', pageWheel)
       window.removeEventListener('keydown', key)
       window.cancelAnimationFrame(follow.current)
       gate.reset()
