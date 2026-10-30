@@ -67,10 +67,13 @@ describe('HomePage', () => {
       screen.getByRole('link', { name: 'All projects' }),
     ).toHaveAttribute('href', '/projects')
     const magilasLinks = screen.getAllByRole('link', { name: /MAGILAS/i })
-    expect(magilasLinks.length).toBeGreaterThanOrEqual(2)
+    expect(magilasLinks.length).toBeGreaterThanOrEqual(1)
     for (const link of magilasLinks) {
       expect(link).toHaveAttribute('href', '/projects/magilas')
     }
+    expect(
+      screen.getByRole('heading', { name: 'A few things I’ve built.' }),
+    ).toBeInTheDocument()
 
     const linkedInLinks = screen.getAllByRole('link', { name: 'LinkedIn' })
     expect(linkedInLinks.length).toBeGreaterThanOrEqual(2)
