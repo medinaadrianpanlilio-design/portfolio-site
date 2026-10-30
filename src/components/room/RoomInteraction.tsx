@@ -11,8 +11,8 @@ import {
   damp,
   easeInOutCubic,
   portraitPullback,
-  progressToStop,
   TOUR_STOPS,
+  tourFrame,
   tourPose,
   type Spot,
 } from './tour'
@@ -23,7 +23,6 @@ const OUTLINE = new THREE.MeshBasicMaterial({ color: '#b54718', side: THREE.Back
 
 /** World units the camera leans at the pointer's full reach. */
 const PARALLAX = { x: 0.06, y: 0.03 }
-const CAMERA_LAMBDA = 7
 const PARALLAX_LAMBDA = 4
 /** "Step into it": how far toward the target, over how long. */
 const DOLLY_DEPTH = 0.3
@@ -47,6 +46,15 @@ function setView(gl: THREE.WebGLRenderer, view: string) {
 
 function setRender(render: RoomTour['render'], invalidate: (() => void) | null) {
   render.current = invalidate
+}
+
+function setPose(pose: RoomTour['pose'], spot: Spot | null) {
+  pose.current = spot
+}
+
+/** A glide is over (or the scene arrived mid-glide): park at its stop. */
+function endGlide(motion: RoomTour['motion']) {
+  motion.current = { ...motion.current, glide: null }
 }
 
 function frameCamera(camera: THREE.Camera, aspect: number) {
@@ -144,16 +152,19 @@ function HoverOutline({ object }: { object: THREE.Object3D }) {
   )
 }
 
-/** Where the tour wants the camera right now, before damping, parallax and dolly. */
-function desiredPose(tour: RoomTour, spots: Spot[]): { pose: Spot; view: string } {
+/** Where the tour wants the camera right now, before parallax and dolly. */
+function desiredPose(tour: RoomTour, spots: Spot[]): { pose: Spot; view: string; done: boolean } {
   if (tour.mode === 'static') {
     const stop = tour.staticStop
     return stop === null
-      ? { pose: spots[0], view: 'start' }
-      : { pose: spots[stop + 1], view: TOUR_STOPS[stop] }
+      ? { pose: spots[0], view: 'start', done: true }
+      : { pose: spots[stop + 1], view: TOUR_STOPS[stop], done: true }
   }
-  const state = progressToStop(tour.progress.current)
-  return { pose: tourPose(spots[state.from], spots[state.to], state.t), view: state.view }
+  const motion = tour.motion.current
+  const frame = tourFrame(motion, performance.now())
+  const { glide } = motion
+  const pose = glide ? tourPose(glide.from, spots[glide.to], frame.t) : spots[motion.stop]
+  return { pose, view: frame.view, done: frame.done }
 }
 
 type CameraState = {
@@ -162,9 +173,6 @@ type CameraState = {
   parallax: THREE.Vector2
   ready: boolean
 }
-
-const far = (a: THREE.Vector3, b: Spot['position']) =>
-  Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z) > SETTLED
 
 const forward = new THREE.Vector3()
 const right = new THREE.Vector3()
@@ -183,6 +191,8 @@ export function RoomInteraction({
   const gl = useThree((state) => state.gl)
   const size = useThree((state) => state.size)
   const invalidate = useThree((state) => state.invalidate)
+  // The un-parallaxed pose shared with the tour, so a new glide starts where the camera is.
+  const shared = useRef<Spot>({ position: { x: 0, y: 0, z: 0 }, target: { x: 0, y: 0, z: 0 } })
   const current = useRef<CameraState>({
     position: new THREE.Vector3(),
     target: new THREE.Vector3(),
@@ -209,25 +219,19 @@ export function RoomInteraction({
     // After an idle stretch (frameloop "demand") delta is huge; never jump.
     const dt = Math.min(delta, 1 / 30)
     const state = current.current
-    const { pose, view } = desiredPose(tour, spots)
+    // Loaded mid-glide: there is no earlier pose to fly from, so appear at the stop.
+    if (!state.ready && tour.motion.current.glide) endGlide(tour.motion)
+    const { pose, view, done } = desiredPose(tour, spots)
+    if (done && tour.motion.current.glide) endGlide(tour.motion)
 
-    if (!state.ready || tour.mode === 'static') {
-      state.position.copy(pose.position)
-      state.target.copy(pose.target)
-      state.ready = true
-    } else {
-      const { position: p, target: t } = state
-      p.set(
-        damp(p.x, pose.position.x, CAMERA_LAMBDA, dt),
-        damp(p.y, pose.position.y, CAMERA_LAMBDA, dt),
-        damp(p.z, pose.position.z, CAMERA_LAMBDA, dt),
-      )
-      t.set(
-        damp(t.x, pose.target.x, CAMERA_LAMBDA, dt),
-        damp(t.y, pose.target.y, CAMERA_LAMBDA, dt),
-        damp(t.z, pose.target.z, CAMERA_LAMBDA, dt),
-      )
-    }
+    // The glide is already timed and eased: the camera follows it exactly.
+    state.position.copy(pose.position)
+    state.target.copy(pose.target)
+    state.ready = true
+    const spot = shared.current
+    Object.assign(spot.position, { x: pose.position.x, y: pose.position.y, z: pose.position.z })
+    Object.assign(spot.target, { x: pose.target.x, y: pose.target.y, z: pose.target.z })
+    setPose(tour.pose, spot)
 
     // Lean with the pointer, except mid-flight or while stepping into a page.
     const dollyStart = tour.dolly.current
@@ -252,8 +256,7 @@ export function RoomInteraction({
     placeLabels(anchors, ui.labels.current, camera, size, avoidRects(gl.domElement))
 
     const moving =
-      far(state.position, pose.position) ||
-      far(state.target, pose.target) ||
+      !done ||
       Math.abs(state.parallax.x - lean.x) > SETTLED ||
       Math.abs(state.parallax.y - lean.y) > SETTLED ||
       dollyTime < 1
@@ -265,13 +268,17 @@ export function RoomInteraction({
     invalidate()
   }, [camera, aspect, invalidate])
 
-  // Scroll, pointer and clicks happen outside the Canvas; let them ask for a frame.
+  // Gestures, pointer and clicks happen outside the Canvas; let them ask for a frame.
   useEffect(() => {
     const { render } = tour
     setRender(render, invalidate)
     invalidate()
     return () => setRender(render, null)
   }, [tour, spots, invalidate])
+
+  // Unmounted: no camera to glide from.
+  const { pose } = tour
+  useEffect(() => () => setPose(pose, null), [pose])
 
   useEffect(() => {
     document.body.style.cursor = ui.hovered ? 'pointer' : ''

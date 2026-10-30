@@ -3,13 +3,42 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import { ROOM_OBJECTS, type RoomObjectName } from '../../content/room'
 import { useMediaQuery } from '../../hooks/useMediaQuery'
 import { usePageTransition } from '../layout/transitionContext'
+import { createGestureGate } from './gestures'
 import styles from './RoomHero.module.css'
 import { RoomPreview } from './RoomPreview'
 import { RoomTourContext, type RoomTour as RoomTourState } from './tourContext'
-import { progressToStop, scrollProgress, stopProgress, TOUR_STOPS } from './tour'
+import {
+  GLIDE_MS,
+  startGlide,
+  step,
+  TOUR_STOPS,
+  tourFrame,
+  type Spot,
+  type TourMotion,
+} from './tour'
 
 const label = (stop: RoomObjectName) => ROOM_OBJECTS.find((entry) => entry.name === stop)!.label
 const clampUnit = (value: number) => Math.min(Math.max(value, -1), 1)
+
+/** Before the scene loads there is no camera to fly from; it appears at the stop once it does. */
+const NO_POSE: Spot = { position: { x: 0, y: 0, z: 0 }, target: { x: 0, y: 0, z: -1 } }
+const copySpot = ({ position, target }: Spot): Spot => ({
+  position: { ...position },
+  target: { ...target },
+})
+
+/** Fields that keep their keys: typing a space or an arrow there never moves the tour. */
+const TYPING = 'input, textarea, select, [contenteditable]'
+/** Space presses these instead of scrolling. */
+const PRESSABLE = 'button, a[href], summary, [role="button"]'
+const KEYS: Partial<Record<string, 1 | -1>> = { ArrowDown: 1, PageDown: 1, ArrowUp: -1, PageUp: -1 }
+
+/** Wheel delta in pixels, whatever unit the browser reported it in. */
+function wheelPixels(event: WheelEvent): number {
+  if (event.deltaMode === 1) return event.deltaY * 16
+  if (event.deltaMode === 2) return event.deltaY * window.innerHeight
+  return event.deltaY
+}
 
 /** Start the "step into it" camera push (read each frame by the scene). */
 function startDolly(dolly: { current: number | null }, render: { current: (() => void) | null }) {
@@ -18,8 +47,10 @@ function startDolly(dolly: { current: number | null }, render: { current: (() =>
 }
 
 /**
- * The pinned scroll tour: a tall track with the room stuck to the viewport,
- * the four preview cards, the step rail and the scroll cue. With reduced
+ * The one-flick tour: the room fills the first screen, and while it does each
+ * wheel flick, swipe or arrow key glides the camera one stop. Past the bed
+ * (or back at the start) gestures are left alone and the page scrolls on.
+ * Also the four preview cards, the step rail and the scroll cue. With reduced
  * motion the room stays put and the labels and rail swap stops instead.
  */
 export function RoomTour({ nameCard, children }: { nameCard: ReactNode; children: ReactNode }) {
@@ -28,55 +59,142 @@ export function RoomTour({ nameCard, children }: { nameCard: ReactNode; children
   const mode = reduced ? 'static' : 'scroll'
   const transitionTo = usePageTransition()
 
-  const track = useRef<HTMLElement>(null)
+  const room = useRef<HTMLElement>(null)
   const stage = useRef<HTMLDivElement>(null)
-  const progress = useRef(0)
+  const motion = useRef<TourMotion>({ stop: 0, glide: null })
+  const pose = useRef<Spot | null>(null)
+  const follow = useRef(0)
   const pointer = useRef({ x: 0, y: 0 })
   const dolly = useRef<number | null>(null)
   const render = useRef<(() => void) | null>(null)
+  const [gate] = useState(createGestureGate)
 
-  const [scrolled, setScrolled] = useState<number | null>(null)
+  const [shown, setShown] = useState<number | null>(null)
   const [staticStop, setStaticStop] = useState<number | null>(null)
   const [started, setStarted] = useState(false)
   const [announcement, setAnnouncement] = useState('')
-  const current = mode === 'scroll' ? scrolled : staticStop
+  const current = mode === 'scroll' ? shown : staticStop
 
-  // Scroll → progress ref. React only hears about it when a card appears or goes.
-  useEffect(() => {
-    const section = track.current
-    const pinned = stage.current
-    if (mode !== 'scroll' || !section || !pinned) return
-    let frame = 0
-    const update = () => {
-      frame = 0
-      const rect = section.getBoundingClientRect()
-      const next = scrollProgress(rect.top, rect.height, pinned.offsetHeight)
-      const state = progressToStop(next)
-      section.dataset.roomPhase = state.view === 'travel' ? 'travel' : 'hold'
-      setScrolled(state.shown)
-      setStarted(next > 0.01)
-      if (next !== progress.current) {
-        progress.current = next
-        render.current?.()
+  /**
+   * Glide to a spot (0 = start, n = TOUR_STOPS[n - 1]). The scene reads the
+   * motion ref each frame; React only hears about it when a card appears or goes.
+   */
+  const glideTo = useCallback(
+    (to: number) => {
+      const section = room.current
+      if (!section) return
+      const now = performance.now()
+      motion.current = startGlide(motion.current, to, now, copySpot(pose.current ?? NO_POSE))
+      gate.busyUntil(now + GLIDE_MS)
+      setShown(null)
+      setStarted(to > 0)
+      render.current?.()
+
+      window.cancelAnimationFrame(follow.current)
+      let last: number | null = null
+      const tick = () => {
+        const frame = tourFrame(motion.current, performance.now())
+        section.dataset.roomPhase = frame.view === 'travel' ? 'travel' : 'hold'
+        if (frame.shown !== last) {
+          last = frame.shown
+          setShown(frame.shown)
+        }
+        follow.current = frame.done ? 0 : window.requestAnimationFrame(tick)
       }
+      follow.current = window.requestAnimationFrame(tick)
+    },
+    [gate],
+  )
+
+  // Gestures → glides, only while the room fills the screen and has a stop to go to.
+  useEffect(() => {
+    const section = room.current
+    if (mode !== 'scroll' || !section) return
+    section.dataset.roomPhase = 'hold'
+
+    // Scrolled even slightly past the room: the page owns every gesture.
+    const engaged = () => section.getBoundingClientRect().top > -2
+    const typing = (target: EventTarget | null) =>
+      target instanceof Element && target.closest(TYPING) !== null
+    const gliding = () =>
+      motion.current.glide !== null && !tourFrame(motion.current, performance.now()).done
+    // Somewhere to go this way: not past the bed, not before the start.
+    const capturing = (direction: number) =>
+      direction !== 0 && typeof step(motion.current.stop, direction > 0 ? 1 : -1) === 'number'
+    const go = (direction: 1 | -1) => {
+      const next = step(motion.current.stop, direction)
+      if (typeof next === 'number') glideTo(next)
     }
-    const schedule = () => {
-      if (!frame) frame = window.requestAnimationFrame(update)
+
+    const wheel = (event: WheelEvent) => {
+      // ctrl + wheel is a trackpad pinch: the browser zooms.
+      if (event.ctrlKey || !engaged() || typing(event.target)) return
+      const delta = wheelPixels(event)
+      // Fed even mid-glide, so trackpad momentum keeps the gate closed.
+      const direction = gate.wheel(delta, performance.now())
+      const busy = gliding()
+      if (busy || capturing(direction || delta)) event.preventDefault()
+      if (direction !== 0 && !busy) go(direction)
     }
-    update()
-    window.addEventListener('scroll', schedule, { passive: true })
-    window.addEventListener('resize', schedule)
+
+    let startY: number | null = null
+    const touchStart = (event: TouchEvent) => {
+      startY = event.touches.length === 1 && engaged() ? event.touches[0].clientY : null
+    }
+    const touchMove = (event: TouchEvent) => {
+      // Two fingers are a pinch: leave it to the browser.
+      if (startY === null || event.touches.length !== 1 || !engaged()) return
+      if (gliding() || capturing(startY - event.touches[0].clientY)) event.preventDefault()
+    }
+    const touchEnd = (event: TouchEvent) => {
+      const from = startY
+      startY = null
+      if (from === null || !engaged() || gliding()) return
+      const direction = gate.swipe(from, event.changedTouches[0].clientY, performance.now())
+      if (direction !== 0) go(direction)
+    }
+    const touchCancel = () => {
+      startY = null
+    }
+
+    const key = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return
+      if (!engaged() || typing(event.target)) return
+      const space = event.key === ' '
+      if (space && event.target instanceof Element && event.target.closest(PRESSABLE)) return
+      const direction = space ? (event.shiftKey ? -1 : 1) : KEYS[event.key]
+      if (!direction) return
+      if (gliding()) {
+        event.preventDefault()
+        return
+      }
+      if (!capturing(direction)) return
+      event.preventDefault()
+      go(direction)
+    }
+
+    section.addEventListener('wheel', wheel, { passive: false })
+    section.addEventListener('touchstart', touchStart, { passive: true })
+    section.addEventListener('touchmove', touchMove, { passive: false })
+    section.addEventListener('touchend', touchEnd)
+    section.addEventListener('touchcancel', touchCancel)
+    window.addEventListener('keydown', key)
     return () => {
-      window.removeEventListener('scroll', schedule)
-      window.removeEventListener('resize', schedule)
-      window.cancelAnimationFrame(frame)
+      section.removeEventListener('wheel', wheel)
+      section.removeEventListener('touchstart', touchStart)
+      section.removeEventListener('touchmove', touchMove)
+      section.removeEventListener('touchend', touchEnd)
+      section.removeEventListener('touchcancel', touchCancel)
+      window.removeEventListener('keydown', key)
+      window.cancelAnimationFrame(follow.current)
+      gate.reset()
       delete section.dataset.roomPhase
     }
-  }, [mode])
+  }, [mode, gate, glideTo])
 
   // Pointer parallax: mouse and trackpad only, on the whole room so overlays don't block it.
   useEffect(() => {
-    const section = track.current
+    const section = room.current
     const pinned = stage.current
     if (reduced || !finePointer || !section || !pinned) return
     const neutral = () => {
@@ -106,7 +224,7 @@ export function RoomTour({ nameCard, children }: { nameCard: ReactNode; children
     }
   }, [reduced, finePointer])
 
-  // Screen readers hear the stop name once it settles, never every scroll tick.
+  // Screen readers hear the stop name once it settles, never mid-glide.
   useEffect(() => {
     if (current === null) return
     const timer = window.setTimeout(() => setAnnouncement(label(TOUR_STOPS[current])), 700)
@@ -121,14 +239,16 @@ export function RoomTour({ nameCard, children }: { nameCard: ReactNode; children
         setStaticStop(index)
         return
       }
-      const section = track.current
-      const pinned = stage.current
-      if (!section || !pinned) return
-      const distance = section.offsetHeight - pinned.offsetHeight
-      const top = window.scrollY + section.getBoundingClientRect().top
-      window.scrollTo({ top: top + stopProgress(index) * distance, behavior: 'smooth' })
+      const section = room.current
+      if (!section) return
+      // From further down the page: back up to the room first, then one glide, even across stops.
+      const top = section.getBoundingClientRect().top
+      if (top <= -2) window.scrollTo({ top: window.scrollY + top, behavior: 'instant' })
+      const { stop, glide } = motion.current
+      if (stop === index + 1 && glide === null) return
+      glideTo(index + 1)
     },
-    [mode],
+    [mode, glideTo],
   )
 
   const open = (index: number) => {
@@ -143,19 +263,14 @@ export function RoomTour({ nameCard, children }: { nameCard: ReactNode; children
   }
 
   const tour = useMemo<RoomTourState>(
-    () => ({ mode, progress, staticStop, pointer, dolly, render, focusStop }),
+    () => ({ mode, motion, pose, staticStop, pointer, dolly, render, focusStop }),
     [mode, staticStop, focusStop],
   )
 
   return (
     <RoomTourContext.Provider value={tour}>
-      <section
-        ref={track}
-        className={mode === 'scroll' ? styles.track : undefined}
-        aria-label="Adrian's room"
-        data-room-tour={mode}
-      >
-        <div ref={stage} className={`${styles.room} ${mode === 'scroll' ? styles.pinned : ''}`}>
+      <section ref={room} aria-label="Adrian's room" data-room-tour={mode}>
+        <div ref={stage} className={styles.room}>
           {/* Phones stack the name card and rail at the top; wide screens place each on its own. */}
           <div className={styles.chrome}>
             {nameCard}

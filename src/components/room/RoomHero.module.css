@@ -1,25 +1,12 @@
 .room {
   position: relative;
-  height: 100svh;
+  /* Follows the phone address bar, so the preview sheet is never under it. */
+  height: 100dvh;
   min-height: 32rem;
   overflow: hidden;
   background:
     radial-gradient(120% 90% at 70% 35%, #f3c98b 0%, #c98a52 38%, #3a2a22 100%);
   border-bottom: 1px solid var(--line);
-}
-
-/* The scroll tour: start, four stops, a short last hold, then normal page flow. */
-.track {
-  --tour-length: 400svh;
-  position: relative;
-  height: calc(100svh + var(--tour-length));
-}
-
-.pinned {
-  position: sticky;
-  top: 0;
-  /* Follows the phone address bar, so the preview sheet is never under it. */
-  height: 100dvh;
 }
 
 .scene {
@@ -221,10 +208,6 @@
 }
 
 @media (max-width: 720px) {
-  .track {
-    --tour-length: 300svh;
-  }
-
   /* Name card, then a compact row of step numbers, clear of the bottom sheet. */
   .chrome {
     position: absolute;

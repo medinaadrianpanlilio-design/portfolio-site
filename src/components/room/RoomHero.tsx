@@ -10,12 +10,12 @@ import { RoomTour } from './RoomTour'
 
 const RoomCanvas = lazy(() => import('./RoomCanvas'))
 
-/** Past the whole tour to the landing headline. */
+/** Past the room to the landing headline, leaving the tour at its stop. */
 function skipToWork() {
   const headline = document.getElementById('home-title')
   if (!headline) return
   const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-  // Jump through the tour; smooth-scrolling it would replay every camera move.
+  // Jump, like deep links do: the room is left in one move, not slid out of.
   const touring = document.querySelector('[data-room-tour="scroll"]')
   ;(headline.closest('section') ?? headline).scrollIntoView({
     behavior: reduced || touring ? 'instant' : 'smooth',
@@ -47,7 +47,7 @@ export function RoomHero({
   const [canRender] = useState(webgl)
   if (mode === 'off') return null
 
-  // No WebGL: the still and the dock links, no tour track of empty screens.
+  // No WebGL: the still and the dock links, no tour.
   if (!canRender) {
     return (
       <section aria-label="Adrian's room">

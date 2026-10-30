@@ -1,17 +1,20 @@
 import { createContext, useContext } from 'react'
 
 import type { RoomObjectName } from '../../content/room'
+import type { Spot, TourMotion } from './tour'
 
 /**
- * The tour's live state, shared by the DOM (scroll track, cards, rail) and
- * the 3D scene. Everything that changes per frame is a ref, so scrolling and
- * pointer moves never re-render React.
+ * The tour's live state, shared by the DOM (gestures, cards, rail) and the 3D
+ * scene. Everything that changes per frame is a ref, so glides and pointer
+ * moves never re-render React.
  */
 export type RoomTour = {
-  /** 'scroll': the pinned scroll tour. 'static': reduced motion, stops change on click. */
+  /** 'scroll': one gesture glides one stop. 'static': reduced motion, stops change on click. */
   mode: 'scroll' | 'static'
-  /** Scroll progress through the track, 0..1 (scroll mode). */
-  progress: { current: number }
+  /** The stop the camera is parked at or gliding to (scroll mode). */
+  motion: { current: TourMotion }
+  /** The camera's current pose without parallax or dolly, written by the scene each frame. */
+  pose: { current: Spot | null }
   /** The stop picked in static mode (index into TOUR_STOPS), or null for the start view. */
   staticStop: number | null
   /** Pointer offset for parallax, -1..1 on each axis; 0 when parallax is off. */
@@ -20,7 +23,7 @@ export type RoomTour = {
   dolly: { current: number | null }
   /** The scene registers its `invalidate` here so DOM events can request a frame. */
   render: { current: (() => void) | null }
-  /** Bring a stop into view (scroll to it, or show it in static mode). */
+  /** Bring a stop into view (glide to it, or show it in static mode). */
   focusStop: (name: RoomObjectName) => void
 }
 

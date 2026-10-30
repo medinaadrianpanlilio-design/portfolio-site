@@ -1,10 +1,12 @@
-import { fireEvent, render as baseRender, screen, within } from '@testing-library/react'
+import { act, fireEvent, render as baseRender, screen, within } from '@testing-library/react'
 import type { ReactElement } from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { site } from '../../../content/site'
+import styles from '../RoomHero.module.css'
 import { RoomHero } from '../RoomHero'
+import { GLIDE_MS } from '../tour'
 
 // The tour's preview links need a router.
 const render = (ui: ReactElement) => {
@@ -24,6 +26,7 @@ const reducedMotion = (reduce: boolean) => {
 }
 
 afterEach(() => {
+  vi.useRealTimers()
   // @ts-expect-error jsdom has no matchMedia; put it back the way it was.
   delete window.matchMedia
 })
@@ -101,6 +104,39 @@ describe('RoomHero', () => {
     expect(previews).toHaveLength(4)
     previews.forEach((preview) => expect(preview).toHaveAttribute('inert'))
     expect(screen.getByText('Scroll to explore')).toBeInTheDocument()
+  })
+
+  it('the room is one viewport tall, no scroll track', () => {
+    render(<RoomHero mode="standin" webgl={() => true} />)
+
+    const room = screen.getByRole('region', { name: "Adrian's room" })
+    expect(room).toHaveAttribute('data-room-tour', 'scroll')
+    expect(room).not.toHaveClass(styles.track)
+  })
+
+  it('a wheel flick shows the projects preview after the glide', () => {
+    vi.useFakeTimers({
+      toFake: [
+        'setTimeout',
+        'clearTimeout',
+        'requestAnimationFrame',
+        'cancelAnimationFrame',
+        'performance',
+        'Date',
+      ],
+    })
+    render(<RoomHero mode="standin" webgl={() => true} />)
+    const room = screen.getByRole('region', { name: "Adrian's room" })
+    const projects = document.querySelector('[data-room-preview="monitor"]')!
+
+    fireEvent.wheel(room, { deltaY: 100 })
+    expect(projects).toHaveAttribute('inert')
+
+    act(() => {
+      vi.advanceTimersByTime(GLIDE_MS + 50)
+    })
+    expect(projects).not.toHaveAttribute('inert')
+    expect(screen.getByRole('button', { name: '01 Projects' })).toHaveAttribute('aria-current', 'step')
   })
 
   it('with reduced motion, a rail step shows that preview without scrolling', () => {

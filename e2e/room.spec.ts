@@ -13,13 +13,15 @@ const STOPS = [
   { name: 'About', object: 'bed', action: 'More about me', url: /\/about$/ },
 ] as const
 
+/** A native scroll from one 120 px flick, well past the 2 px that disengages the room. */
+const SCROLLED = 100
+
 const preview = (page: Page, object: string) =>
   page.locator(`[data-room-preview="${object}"]`)
 
 /**
- * Wait out a card's fade-in before clicking it. Playwright retries a click by
- * scrolling the element into view, which for a sticky element scrolls the
- * page away from the stop.
+ * Wait out a card's fade-in before clicking it, so the click lands on the
+ * settled card rather than chasing it mid-fade.
  */
 async function settled(card: ReturnType<typeof preview>) {
   await expect(card).toBeVisible()
@@ -28,16 +30,28 @@ async function settled(card: ReturnType<typeof preview>) {
   )
 }
 
-/** Scroll straight to the middle of a stop's hold, the way a reader would land there. */
-async function scrollToStop(page: Page, index: number) {
-  await page.evaluate((index) => {
-    const track = document.querySelector<HTMLElement>('[data-room-tour="scroll"]')!
-    const stage = track.firstElementChild as HTMLElement
-    const distance = track.offsetHeight - stage.offsetHeight
-    const hold = 0.22
-    const top = track.getBoundingClientRect().top + window.scrollY
-    window.scrollTo({ top: top + ((index + 1 - hold / 2) / 4) * distance, behavior: 'instant' })
-  }, index)
+const view = (page: Page, name: string) => page.locator(`canvas[data-view="${name}"]`)
+const scrollY = (page: Page) => page.evaluate(() => window.scrollY)
+const toTop = (page: Page) =>
+  page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
+
+/** One wheel flick over the room. */
+async function flick(page: Page, deltaY: number) {
+  await page.mouse.move(720, 500)
+  await page.mouse.wheel(0, deltaY)
+}
+
+/**
+ * The view names the stop from the glide's last 10%; let the glide end and the
+ * gate's quiet gap pass before the next gesture, the way a reader pauses.
+ */
+const arrived = (page: Page) => page.waitForTimeout(400)
+
+/** Glide straight to a stop with its rail step. */
+async function railTo(page: Page, index: number) {
+  const stop = STOPS[index]
+  await page.getByRole('button', { name: `0${index + 1} ${stop.name}` }).click()
+  await expect(view(page, stop.object)).toHaveCount(1)
 }
 
 test('overlay is usable before the room loads', async ({ page }) => {
@@ -138,80 +152,146 @@ test.describe('desktop labels (reduced motion: no scroll tour)', () => {
 test.describe('scroll tour (desktop)', () => {
   test.use({ viewport: { width: 1440, height: 1000 } })
 
-  test('scrolling visits monitor, system unit, window, bed, then releases the page', async ({
+  test('one wheel flick per stop visits monitor, system unit, window, bed, then releases the page', async ({
     page,
   }) => {
     await page.goto('/')
-    await expect(page.locator('canvas[data-view="start"]')).toHaveCount(1)
+    await expect(view(page, 'start')).toHaveCount(1)
     await expect(page.getByText('Scroll to explore')).toBeVisible()
     await expect(page.locator('[data-room-preview]:not([inert])')).toHaveCount(0)
 
     for (const [index, stop] of STOPS.entries()) {
-      await scrollToStop(page, index)
-      await expect(page.locator(`canvas[data-view="${stop.object}"]`)).toHaveCount(1)
+      await flick(page, 120)
+      await expect(view(page, stop.object)).toHaveCount(1)
       await expect(preview(page, stop.object)).toBeVisible()
       await expect(page.locator('[data-room-preview]:not([inert])')).toHaveCount(1)
       await expect(
         page.getByRole('button', { name: `0${index + 1} ${stop.name}` }),
       ).toHaveAttribute('aria-current', 'step')
-      // The room is still pinned to the viewport.
-      const top = await page
-        .locator('[data-room-tour="scroll"] > div')
-        .evaluate((stage) => stage.getBoundingClientRect().top)
-      expect(Math.abs(top)).toBeLessThan(1)
-      // Let the camera settle before the picture.
-      await page.waitForTimeout(900)
+      // The room holds the page still while it tours.
+      expect(await scrollY(page)).toBe(0)
+      await arrived(page)
       await page.screenshot({ path: `artifacts/e2e-tour-${stop.object}.png` })
     }
     await expect(page.getByText('Scroll to explore')).toBeHidden()
 
-    // Past About, the page carries on into the homepage.
-    await page.mouse.move(720, 500)
-    for (let i = 0; i < 3; i++) await page.mouse.wheel(0, 250)
-    await expect
-      .poll(() =>
-        page
-          .locator('[data-room-tour="scroll"] > div')
-          .evaluate((stage) => stage.getBoundingClientRect().top),
-      )
-      .toBeLessThan(-100)
+    // Past About, the next flick scrolls the page into the homepage.
+    await flick(page, 120)
+    await expect.poll(() => scrollY(page)).toBeGreaterThan(SCROLLED)
+    await page.mouse.wheel(0, 900)
     await expect(
       page.getByRole('heading', { level: 1, name: /Software.*Systems.*AI/i }),
     ).toBeInViewport()
+    // Leaving never moves the camera.
+    await expect(view(page, 'bed')).toHaveCount(1)
   })
 
-  test('the wheel scrolls natively', async ({ page }) => {
+  test('a momentum burst moves one stop', async ({ page }) => {
     await page.goto('/')
-    await expect(page.locator('canvas[data-view="start"]')).toHaveCount(1)
+    await expect(view(page, 'start')).toHaveCount(1)
     await page.mouse.move(720, 500)
-    await page.mouse.wheel(0, 300)
-    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(200)
-    await page.mouse.wheel(0, 600)
-    await expect(page.locator('canvas[data-view="monitor"]')).toHaveCount(1)
+    for (let i = 0; i < 40; i++) {
+      await page.mouse.wheel(0, 60)
+      await page.waitForTimeout(16)
+    }
+    await expect(view(page, 'monitor')).toHaveCount(1)
+    await page.waitForTimeout(1500)
+    await expect(view(page, 'monitor')).toHaveCount(1)
+    expect(await scrollY(page)).toBe(0)
   })
 
-  test('a rail step scrolls to its stop', async ({ page }) => {
+  test('scrolling back to the top re-engages where the tour left', async ({ page }) => {
     await page.goto('/')
-    await expect(page.locator('canvas[data-view="start"]')).toHaveCount(1)
+    await expect(view(page, 'start')).toHaveCount(1)
+    for (const stop of STOPS) {
+      await flick(page, 120)
+      await expect(view(page, stop.object)).toHaveCount(1)
+      await arrived(page)
+    }
+    await flick(page, 120)
+    await expect.poll(() => scrollY(page)).toBeGreaterThan(SCROLLED)
+
+    await toTop(page)
+    await expect(view(page, 'bed')).toHaveCount(1)
+    await expect(preview(page, 'bed')).toBeVisible()
+    await flick(page, -120)
+    await expect(view(page, 'window')).toHaveCount(1)
+    expect(await scrollY(page)).toBe(0)
+  })
+
+  test('skip to my work, then back to the top shows start', async ({ page }) => {
+    await page.goto('/')
+    await expect(view(page, 'start')).toHaveCount(1)
+    await page.getByRole('button', { name: 'Skip to my work' }).click()
+    const headline = page.getByRole('heading', { level: 1, name: /Software.*Systems.*AI/i })
+    await expect(headline).toBeInViewport()
+    await expect(headline).toBeFocused()
+
+    await toTop(page)
+    await expect(view(page, 'start')).toHaveCount(1)
+    await expect(page.locator('[data-room-preview]:not([inert])')).toHaveCount(0)
+    // And the tour picks up from there.
+    await flick(page, 120)
+    await expect(view(page, 'monitor')).toHaveCount(1)
+  })
+
+  test('reload mid-page does not capture', async ({ page }) => {
+    await page.goto('/')
+    await expect(view(page, 'start')).toHaveCount(1)
+    await page.evaluate(() => window.scrollTo({ top: 2000, behavior: 'instant' }))
+    await page.reload()
+    await expect(page.locator('canvas[data-view]')).toHaveCount(1)
+    // The site's own scroll reset lands a reload at the top; put it back the way a
+    // browser's scroll restore would, before any gesture.
+    await page.evaluate(() => window.scrollTo({ top: 2000, behavior: 'instant' }))
+    await flick(page, 120)
+    await expect.poll(() => scrollY(page)).toBeGreaterThan(2000)
+    await expect(view(page, 'start')).toHaveCount(1)
+  })
+
+  test('keys glide; typing in the AI guide does not', async ({ page }) => {
+    await page.goto('/')
+    await expect(view(page, 'start')).toHaveCount(1)
+    await page.keyboard.press('ArrowDown')
+    await expect(view(page, 'monitor')).toHaveCount(1)
+    await arrived(page)
+
+    // Focus without scrolling, so the room is still engaged when the key goes down.
+    // (The browser then scrolls the caret into view as the space is typed.)
+    const field = page
+      .locator('section[aria-labelledby="ai-guide-heading"]')
+      .getByRole('textbox')
+    await field.evaluate((input: HTMLElement) => input.focus({ preventScroll: true }))
+    await page.keyboard.press('Space')
+    await expect(field).toHaveValue(/ /)
+    await page.waitForTimeout(1200)
+    await expect(view(page, 'monitor')).toHaveCount(1)
+  })
+
+  test('a rail step glides to its stop', async ({ page }) => {
+    await page.goto('/')
+    await expect(view(page, 'start')).toHaveCount(1)
     await page.getByRole('button', { name: '03 Contact' }).click()
-    await expect(page.locator('canvas[data-view="window"]')).toHaveCount(1)
+    await expect(view(page, 'travel')).toHaveCount(1)
+    await expect(view(page, 'window')).toHaveCount(1)
     await expect(preview(page, 'window')).toBeVisible()
+    expect(await scrollY(page)).toBe(0)
   })
 
-  test('a label scrolls to its stop instead of navigating', async ({ page }) => {
+  test('a label glides to its stop instead of navigating', async ({ page }) => {
     await page.goto('/')
-    await expect(page.locator('canvas[data-view="start"]')).toHaveCount(1)
+    await expect(view(page, 'start')).toHaveCount(1)
     await page.getByRole('button', { name: label('About') }).focus()
     await page.keyboard.press('Enter')
-    await expect(page.locator('canvas[data-view="bed"]')).toHaveCount(1)
+    await expect(view(page, 'bed')).toHaveCount(1)
     await expect(page).toHaveURL(/\/$/)
     await expect(preview(page, 'bed')).toBeVisible()
   })
 
   test('the preview action steps into the page behind a warm overlay', async ({ page }) => {
     await page.goto('/')
-    await expect(page.locator('canvas[data-view="start"]')).toHaveCount(1)
-    await scrollToStop(page, 0)
+    await expect(view(page, 'start')).toHaveCount(1)
+    await railTo(page, 0)
     const card = preview(page, 'monitor')
     await settled(card)
     await card.getByRole('link', { name: 'Open projects' }).click()
@@ -219,22 +299,13 @@ test.describe('scroll tour (desktop)', () => {
     await expect(page).toHaveURL(/\/projects$/)
     await expect(page.locator('[data-phase]')).toHaveCount(0)
     await expect(page.getByRole('heading', { level: 1, name: 'Projects' })).toBeFocused()
-    expect(await page.evaluate(() => window.scrollY)).toBe(0)
-  })
-
-  test('skip jumps past the whole tour', async ({ page }) => {
-    await page.goto('/')
-    await expect(page.locator('canvas[data-view="start"]')).toHaveCount(1)
-    await page.getByRole('button', { name: 'Skip to my work' }).click()
-    const headline = page.getByRole('heading', { level: 1, name: /Software.*Systems.*AI/i })
-    await expect(headline).toBeInViewport()
-    await expect(headline).toBeFocused()
+    expect(await scrollY(page)).toBe(0)
   })
 
   test('axe: no serious issues with a preview open', async ({ page }) => {
     await page.goto('/')
-    await expect(page.locator('canvas[data-view="start"]')).toHaveCount(1)
-    await scrollToStop(page, 2)
+    await expect(view(page, 'start')).toHaveCount(1)
+    await railTo(page, 2)
     await expect(preview(page, 'window')).toBeVisible()
     const results = await new AxeBuilder({ page }).analyze()
     const serious = results.violations.filter((violation) =>
@@ -250,7 +321,7 @@ test('double press during the transition navigates once', async ({ page }) => {
   await expect(page.locator('canvas[data-view="start"]')).toHaveCount(1)
   const before = await page.evaluate(() => history.length)
 
-  await scrollToStop(page, 0)
+  await railTo(page, 0)
   await settled(preview(page, 'monitor'))
   const action = preview(page, 'monitor').getByRole('link', { name: 'Open projects' })
   await action.focus()
@@ -321,7 +392,7 @@ test.describe('phone', () => {
     const dock = (await page.getByRole('navigation', { name: 'Primary navigation' }).boundingBox())!
 
     for (const [index, stop] of STOPS.entries()) {
-      await scrollToStop(page, index)
+      await railTo(page, index)
       const card = preview(page, stop.object)
       await expect(card).toBeVisible()
       await expect(card.getByRole('link', { name: stop.action })).toBeInViewport({ ratio: 1 })
@@ -386,22 +457,37 @@ test.describe('review fixes', () => {
     hasTouch: true,
   })
 
-  test('phone: swiping on the room scrolls the page', async ({ page }) => {
-    await page.goto('/')
-    await expect(page.locator('canvas[data-view="start"]')).toHaveCount(1)
-
-    // Raw touch events (synthesizeScrollGesture doesn't scroll in headless Chromium).
+  /** A raw one-finger swipe (synthesizeScrollGesture doesn't scroll in headless Chromium). */
+  async function swipe(page: Page, fromY: number, toY: number) {
     const client = await page.context().newCDPSession(page)
     const touch = (type: string, y?: number) =>
       client.send('Input.dispatchTouchEvent', {
         type,
         touchPoints: y === undefined ? [] : [{ x: 195, y }],
       })
-    await touch('touchStart', 650)
-    for (let step = 1; step <= 10; step++) await touch('touchMove', 650 - step * 40)
+    await touch('touchStart', fromY)
+    for (let step = 1; step <= 8; step++) await touch('touchMove', fromY + ((toY - fromY) * step) / 8)
     await touch('touchEnd')
+  }
 
-    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(100)
+  test('phone: a swipe glides one stop', async ({ page }) => {
+    await page.goto('/')
+    await expect(view(page, 'start')).toHaveCount(1)
+
+    await swipe(page, 650, 570)
+    await expect(view(page, 'monitor')).toHaveCount(1)
+    await expect(preview(page, 'monitor')).toBeVisible()
+    expect(await scrollY(page)).toBe(0)
+  })
+
+  test('phone: below the room, swipes scroll natively', async ({ page }) => {
+    await page.goto('/')
+    await expect(view(page, 'start')).toHaveCount(1)
+    await page.evaluate(() => window.scrollTo({ top: 1200, behavior: 'instant' }))
+
+    await swipe(page, 650, 250)
+    await expect.poll(() => scrollY(page)).toBeGreaterThan(1300)
+    await expect(view(page, 'start')).toHaveCount(1)
   })
 })
 
