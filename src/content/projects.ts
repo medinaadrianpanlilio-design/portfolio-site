@@ -5,6 +5,8 @@ const magilas: Project = {
   name: 'Magilas Gym',
   displayName: 'MAGILAS',
   subtitle: 'gym management system',
+  tagline: 'Gym management system for a real gym.',
+  flow: ['QR entry', 'POS', 'Reports'],
   summary:
     'A live gym management system: POS and admin workflows for memberships, inventory, QR entry, financial records, and maintenance. I built the POS/admin side for a real gym in San Luis, Pampanga.',
   role: 'POS / admin developer',
@@ -67,6 +69,8 @@ const healthyaSat: Project = {
   name: 'HealthyaSat',
   displayName: 'HEALTHYASAT',
   subtitle: 'health-claim fact checker',
+  tagline: 'Fact-checks Taglish health claims.',
+  flow: ['Extract', 'Classify', 'Flag'],
   summary:
     'A browser extension that checks Taglish health claims on Philippine news sites. I worked on the backend/API: claim extraction, DOH/WHO-informed classification, severity flagging, and database insertion.',
   role: 'Backend / API developer',
@@ -128,6 +132,8 @@ const iahbrary: Project = {
   name: 'Iahbrary',
   displayName: 'IAHBRARY',
   subtitle: 'reading tracker',
+  tagline: 'Reading tracker with stats.',
+  flow: ['Timer', 'Sync', 'Stats'],
   summary:
     'A reading tracker for timed sessions, pace, a personal library, reviews, highlights, and weekly stats. Built solo with Expo, TypeScript, and Supabase; the public repo is a sanitized copy.',
   role: 'Solo developer',
@@ -195,6 +201,8 @@ const skySprout: Project = {
   name: 'SkySprout',
   displayName: 'SKYSPROUT',
   subtitle: 'a live Roblox garden',
+  tagline: 'A live Roblox garden with weather events.',
+  flow: ['Plant', 'Harvest', 'Sell'],
   summary:
     'A low-poly Roblox growing simulator built for fun: server-authoritative growth, offline earnings, and a 44-minute weather cycle with stacking mutations. A solo hobby project, not the main focus.',
   role: 'Solo hobby project',
@@ -261,6 +269,7 @@ const skySprout: Project = {
 }
 
 export const projects: Project[] = [magilas, healthyaSat, iahbrary]
+export const featuredProjects: Project[] = [magilas, healthyaSat, iahbrary]
 export const hobbyProject: Project = skySprout
 export const allProjects: Project[] = [...projects, hobbyProject]
 

@@ -34,6 +34,8 @@ export type Project = {
   name: string
   displayName: string
   subtitle: string
+  tagline: string
+  flow: [string, string, string]
   summary: string
   role: string
   focus: string

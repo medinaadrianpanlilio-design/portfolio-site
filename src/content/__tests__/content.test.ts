@@ -4,7 +4,13 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
 import { about } from '../about'
-import { allProjects, getProject, hobbyProject, projects } from '../projects'
+import {
+  allProjects,
+  featuredProjects,
+  getProject,
+  hobbyProject,
+  projects,
+} from '../projects'
 import { site } from '../site'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..')
@@ -18,6 +24,15 @@ describe('project content', () => {
       'HealthyaSat',
       'Iahbrary',
     ])
+  })
+
+  it('featured projects have a tagline and a three-step flow', () => {
+    expect(featuredProjects.map((p) => p.slug)).toEqual(['magilas', 'healthya-sat', 'iahbrary'])
+    for (const p of featuredProjects) {
+      expect(p.tagline.length).toBeGreaterThan(0)
+      expect(p.tagline.length).toBeLessThanOrEqual(48)
+      expect(p.flow).toHaveLength(3)
+    }
   })
 
   it('keeps SkySprout as a separate hobby at the end', () => {
