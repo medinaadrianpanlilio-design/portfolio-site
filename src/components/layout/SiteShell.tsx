@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 
+import { PageTransitionProvider } from './PageTransition'
 import { SiteFooter } from './SiteFooter'
 import { SiteDock } from './SiteDock'
 
@@ -18,7 +19,8 @@ function ScrollManager() {
         return
       }
     }
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    // Instant: a new page starts at the top, not after a smooth scroll up the old one.
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
   }, [pathname, hash])
 
   return null
@@ -28,7 +30,7 @@ export function SiteShell() {
   const location = useLocation()
 
   return (
-    <>
+    <PageTransitionProvider>
       <a className="skip-link" href="#main">
         Skip to content
       </a>
@@ -40,6 +42,6 @@ export function SiteShell() {
         <SiteFooter />
       </div>
       <SiteDock />
-    </>
+    </PageTransitionProvider>
   )
 }

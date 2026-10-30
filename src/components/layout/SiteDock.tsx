@@ -6,7 +6,7 @@ export function SiteDock() {
   const location = useLocation();
 
   return (
-    <div className={styles.dockWrap}>
+    <div className={styles.dockWrap} data-room-avoid>
       <nav aria-label="Primary navigation" className={styles.dock}>
         <Link to="/" className={styles.brand} aria-label="AM — Adrian Medina">
           AM

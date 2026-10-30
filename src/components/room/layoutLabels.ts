@@ -6,7 +6,7 @@ const MARGIN = 8
 const GAP = 4
 const MAX_STEPS = 6
 
-const overlaps = (a: Rect, b: Rect) =>
+export const overlaps = (a: Rect, b: Rect) =>
   a.x < b.x + b.width &&
   b.x < a.x + a.width &&
   a.y < b.y + b.height &&

@@ -12,6 +12,19 @@
   will-change: transform;
 }
 
+/* Mid-flight between stops the labels would slide around: fade them out. */
+.anchor {
+  transition: opacity 200ms ease;
+}
+
+:global([data-room-phase='travel']) .anchor {
+  opacity: 0;
+}
+
+:global([data-room-phase='travel']) .label {
+  pointer-events: none;
+}
+
 /* Until the scene places a label, it has no position and no handler yet. */
 .anchor:not([data-placed]) {
   visibility: hidden;

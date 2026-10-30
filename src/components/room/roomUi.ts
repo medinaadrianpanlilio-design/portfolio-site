@@ -9,10 +9,8 @@ import type { RoomObjectName } from '../../content/room'
 export type RoomUi = {
   hovered: RoomObjectName | null
   setHovered: (name: RoomObjectName | null) => void
-  /** Fly to an object and open its page (no-op until the scene is ready). */
+  /** Focus a tour stop and show its preview; the résumé opens its PDF directly. */
   select: (name: RoomObjectName) => void
-  /** RoomInteraction provides the real `select` once the camera controls exist. */
-  registerSelect: (select: ((name: RoomObjectName) => void) | null) => void
   /** Label wrappers, positioned each frame by RoomInteraction. */
   labels: { current: Partial<Record<RoomObjectName, HTMLElement | null>> }
 }

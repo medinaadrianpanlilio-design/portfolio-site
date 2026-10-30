@@ -4,6 +4,7 @@ import { useMemo, useRef, useState } from 'react'
 import type * as THREE from 'three'
 
 import { ROOM_MODEL_URL, ROOM_OBJECTS, type RoomObjectName } from '../../content/room'
+import { site } from '../../content/site'
 import { applyBakedMaterials } from './applyBakedMaterials'
 import { findRoomNodes } from './findRoomNodes'
 import { RoomErrorBoundary } from './RoomErrorBoundary'
@@ -13,6 +14,7 @@ import { RoomLabel } from './RoomLabel'
 import { RoomProgress } from './RoomProgress'
 import styles from './RoomLabel.module.css'
 import type { RoomMode } from './roomMode'
+import { useRoomTour } from './tourContext'
 import { RoomUiContext, type RoomUi } from './roomUi'
 import { createStandInRoom } from './StandInRoom'
 
@@ -48,19 +50,18 @@ function StandInRoom() {
 
 export default function RoomCanvas({ mode }: RoomCanvasProps) {
   const [hovered, setHovered] = useState<RoomObjectName | null>(null)
-  const select = useRef<((name: RoomObjectName) => void) | null>(null)
   const labels = useRef<RoomUi['labels']['current']>({})
+  const { focusStop } = useRoomTour()
   const ui = useMemo<RoomUi>(
     () => ({
       hovered,
       setHovered,
-      select: (name) => select.current?.(name),
-      registerSelect: (next) => {
-        select.current = next
-      },
+      // The PDF needs a real navigation; a delayed `window.open` is popup-blocked on phones.
+      select: (name) =>
+        name === 'resume_paper' ? window.location.assign(site.resumePdf) : focusStop(name),
       labels,
     }),
-    [hovered],
+    [hovered, focusStop],
   )
 
   return (
@@ -86,6 +87,7 @@ export default function RoomCanvas({ mode }: RoomCanvasProps) {
             >
               <RoomLabel
                 label={entry.label}
+                action={entry.name === 'resume_paper' ? 'open from the room' : 'show in the room'}
                 active={hovered === entry.name}
                 onSelect={() => ui.select(entry.name)}
                 onHover={(over) => setHovered(over ? entry.name : null)}
