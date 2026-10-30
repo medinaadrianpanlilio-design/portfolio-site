@@ -251,6 +251,8 @@ export function RoomInteraction({
       .addScaledVector(right, state.parallax.x * PARALLAX.x)
       .addScaledVector(UP, -state.parallax.y * PARALLAX.y)
     camera.lookAt(state.target)
+    // lookAt leaves matrixWorld on last frame's rotation until render; labels project with it.
+    camera.updateMatrixWorld()
 
     setView(gl, view)
     placeLabels(anchors, ui.labels.current, camera, size, avoidRects(gl.domElement))

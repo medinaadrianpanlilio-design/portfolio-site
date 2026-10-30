@@ -84,7 +84,7 @@ export function RoomTour({ nameCard, children }: { nameCard: ReactNode; children
       const section = room.current
       if (!section) return
       const now = performance.now()
-      motion.current = startGlide(motion.current, to, now, copySpot(pose.current ?? NO_POSE))
+      motion.current = startGlide(to, now, copySpot(pose.current ?? NO_POSE))
       gate.busyUntil(now + GLIDE_MS)
       setShown(null)
       setStarted(to > 0)

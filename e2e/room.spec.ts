@@ -424,6 +424,17 @@ test.describe('phone', () => {
       }
     }
 
+    // Labels sit near their objects: projected with this frame's camera, not
+    // last frame's (stale rotation put them bottom-right / under the cue).
+    const byName = Object.fromEntries(boxes.map((box) => [box.name, box]))
+    const projects = byName.Projects
+    expect(projects.y + projects.height / 2, 'Projects in the upper part').toBeLessThan(844 * 0.6)
+    expect(projects.y + projects.height / 2, 'Projects above About').toBeLessThan(
+      byName.About.y + byName.About.height / 2,
+    )
+    const cue = (await page.getByText('Scroll to explore').boundingBox())!
+    expect(byName.About.y + byName.About.height, 'About clear of the scroll cue').toBeLessThanOrEqual(cue.y)
+
     const overflow = await page.evaluate(
       () =>
         document.documentElement.scrollWidth >
@@ -576,7 +587,7 @@ test('opening Skills again after scrolling up scrolls down again', async ({ page
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(500)
 })
 
-test('hovering the work list keeps the room alive', async ({ page }) => {
+test('pointer moves over the work list do not create new WebGL contexts', async ({ page }) => {
   await page.addInitScript(() => {
     const counter = window as unknown as { __webgl: number }
     counter.__webgl = 0
@@ -594,7 +605,7 @@ test('hovering the work list keeps the room alive', async ({ page }) => {
   await page.goto('/')
   await expect(page.locator('canvas[data-view="start"]')).toHaveCount(1)
 
-  // The selected-work row (its pointer moves re-render HomePage).
+  // A selected-work link far below the room; hovering it must leave the room's context alone.
   const row = page
     .locator('section[aria-labelledby="selected-work-heading"]')
     .getByRole('link', { name: /MAGILAS/i })

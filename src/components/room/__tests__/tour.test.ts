@@ -63,7 +63,7 @@ describe('tourFrame', () => {
 describe('startGlide', () => {
   it('retargets from the current camera pose', () => {
     const now = spot([1, 2, 3], [0, 0, 0])
-    const motion = startGlide({ stop: 1, glide: null }, 3, 500, now)
+    const motion = startGlide(3, 500, now)
     expect(motion).toEqual({ stop: 3, glide: { from: now, to: 3, start: 500, duration: GLIDE_MS } })
   })
 })

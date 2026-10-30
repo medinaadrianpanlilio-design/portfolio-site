@@ -32,15 +32,19 @@ export function createGestureGate(): GestureGate {
   let sum = 0
   let busy = 0
   let lastClosedWheel = -Infinity
+  let lastWheel = -Infinity
 
   const closed = (now: number) => now < Math.max(busy, lastClosedWheel + QUIET_MS)
 
   return {
     wheel(deltaY, now) {
+      const idle = now - lastWheel > QUIET_MS
+      lastWheel = now
       if (closed(now)) {
         lastClosedWheel = now
         return 0
       }
+      if (idle) sum = 0
       sum += deltaY
       if (Math.abs(sum) < WHEEL_THRESHOLD) return 0
       const direction = sum > 0 ? 1 : -1
@@ -66,6 +70,7 @@ export function createGestureGate(): GestureGate {
       sum = 0
       busy = 0
       lastClosedWheel = -Infinity
+      lastWheel = -Infinity
     },
   }
 }

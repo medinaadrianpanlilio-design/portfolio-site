@@ -1,6 +1,6 @@
 import type { RoomObjectName } from '../../content/room'
 
-/** The four tour stops, in scroll order. The résumé is not one of them. */
+/** The four tour stops, in tour order (the order a gesture steps through them). The résumé is not one of them. */
 export const TOUR_STOPS = ['monitor', 'system_unit', 'window', 'bed'] as const satisfies readonly RoomObjectName[]
 export type TourStop = (typeof TOUR_STOPS)[number]
 
@@ -70,11 +70,9 @@ export function tourFrame(motion: TourMotion, now: number): TourFrame {
 }
 
 /** Begin a glide to `to` from wherever the camera is now. */
-export function startGlide(motion: TourMotion, to: number, now: number, currentPose: Spot): TourMotion {
-  void motion
+export function startGlide(to: number, now: number, currentPose: Spot): TourMotion {
   return { stop: to, glide: { from: currentPose, to, start: now, duration: GLIDE_MS } }
 }
-
 
 const PULL_MAX = 0.3
 

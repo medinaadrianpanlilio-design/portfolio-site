@@ -8,6 +8,12 @@ describe('gesture gate', () => {
     expect(gate.wheel(20, 0)).toBe(0)
     expect(gate.wheel(15, 10)).toBe(1)
   })
+  it('a partial wheel sum decays after the wheel goes quiet', () => {
+    const gate = createGestureGate()
+    expect(gate.wheel(20, 0)).toBe(0)
+    expect(gate.wheel(15, QUIET_MS + 100)).toBe(0)
+    expect(gate.wheel(20, QUIET_MS + 150)).toBe(1)
+  })
   it('a momentum burst after a glide fires only once', () => {
     const gate = createGestureGate()
     let fired = 0
