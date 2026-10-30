@@ -3,12 +3,12 @@ import { describe, expect, it } from 'vitest'
 import {
   damp,
   easeInOutCubic,
-  HOLD,
+  GLIDE_MS,
   portraitPullback,
-  progressToStop,
-  scrollProgress,
-  stopProgress,
+  startGlide,
+  step,
   TOUR_STOPS,
+  tourFrame,
   tourPose,
   type Spot,
 } from '../tour'
@@ -24,48 +24,47 @@ describe('tour order', () => {
   })
 })
 
-describe('scrollProgress', () => {
-  it('maps the sticky distance to 0..1', () => {
-    expect(scrollProgress(0, 5000, 1000)).toBe(0)
-    expect(scrollProgress(-2000, 5000, 1000)).toBe(0.5)
-    expect(scrollProgress(-4000, 5000, 1000)).toBe(1)
+describe('step', () => {
+  it('moves one stop at a time', () => {
+    expect(step(0, 1)).toBe(1)
+    expect(step(3, 1)).toBe(4)
+    expect(step(2, -1)).toBe(1)
   })
-
-  it('clamps before and after the track', () => {
-    expect(scrollProgress(300, 5000, 1000)).toBe(0)
-    expect(scrollProgress(-9000, 5000, 1000)).toBe(1)
-  })
-
-  it('is 0 when the track is no taller than the stage', () => {
-    expect(scrollProgress(-50, 1000, 1000)).toBe(0)
+  it('releases forward past the bed and does nothing back from start', () => {
+    expect(step(4, 1)).toBe('release')
+    expect(step(0, -1)).toBeNull()
   })
 })
 
-describe('progressToStop', () => {
-  it('shows the start view at 0', () => {
-    expect(progressToStop(0)).toMatchObject({ from: 0, to: 1, t: 0, shown: null, view: 'start' })
+describe('tourFrame', () => {
+  const pose = spot([0, 0, 0], [0, 0, -1])
+  it('parks on start with nothing shown', () => {
+    expect(tourFrame({ stop: 0, glide: null }, 0)).toEqual({ t: 1, done: true, shown: null, view: 'start' })
   })
-
-  it('travels between stops with nothing shown mid-flight', () => {
-    const state = progressToStop(0.25 + (1 - HOLD) * 0.125)
-    expect(state).toMatchObject({ from: 1, to: 2, phase: 'travel', shown: null, view: 'travel' })
-    expect(state.t).toBeCloseTo(0.5)
+  it('parks on a stop with its preview', () => {
+    expect(tourFrame({ stop: 2, glide: null }, 0)).toMatchObject({ shown: 1, view: 'system_unit', done: true })
   })
-
-  it('holds exactly on each stop with its preview', () => {
-    TOUR_STOPS.forEach((name, index) => {
-      const state = progressToStop(stopProgress(index))
-      expect(state).toMatchObject({ to: index + 1, t: 1, phase: 'hold', shown: index, view: name })
-    })
+  it('is travelling mid-glide with nothing shown', () => {
+    const motion = { stop: 1, glide: { from: pose, to: 1, start: 0, duration: GLIDE_MS } }
+    const frame = tourFrame(motion, GLIDE_MS / 2)
+    expect(frame).toMatchObject({ view: 'travel', shown: null, done: false })
+    expect(frame.t).toBeCloseTo(0.5)
   })
-
-  it('ends on the bed at 1', () => {
-    expect(progressToStop(1)).toMatchObject({ to: 4, t: 1, shown: 3, view: 'bed' })
+  it('shows the arriving card in the last 10%', () => {
+    const motion = { stop: 1, glide: { from: pose, to: 1, start: 0, duration: GLIDE_MS } }
+    expect(tourFrame(motion, GLIDE_MS * 0.95).shown).toBe(0)
   })
+  it('is done once the duration has passed', () => {
+    const motion = { stop: 1, glide: { from: pose, to: 1, start: 0, duration: GLIDE_MS } }
+    expect(tourFrame(motion, GLIDE_MS + 1)).toMatchObject({ done: true, view: 'monitor', t: 1 })
+  })
+})
 
-  it('keeps the last preview briefly as the next flight begins', () => {
-    expect(progressToStop(0.251).shown).toBe(0)
-    expect(progressToStop(0.3).shown).toBeNull()
+describe('startGlide', () => {
+  it('retargets from the current camera pose', () => {
+    const now = spot([1, 2, 3], [0, 0, 0])
+    const motion = startGlide({ stop: 1, glide: null }, 3, 500, now)
+    expect(motion).toEqual({ stop: 3, glide: { from: now, to: 3, start: 500, duration: GLIDE_MS } })
   })
 })
 
