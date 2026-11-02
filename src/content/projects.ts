@@ -268,7 +268,70 @@ const skySprout: Project = {
   },
 }
 
-export const projects: Project[] = [magilas, healthyaSat, iahbrary]
+const realearn: Project = {
+  slug: 'realearn',
+  name: 'Realearn',
+  displayName: 'REALEARN',
+  subtitle: 'learn how real software works',
+  tagline: 'Follows one action’s data through a real system.',
+  flow: ['Input', 'Process', 'Output'],
+  summary:
+    'A Windows desktop app in development: pick a real system, choose a feature, and follow its data from input, through processing, to output, with every step explained. The spec and architecture are written and fine-tuning of the local explanation model has started; the app is not built yet.',
+  role: 'Solo developer',
+  focus: 'Static analysis, local LLMs, fine-tuning',
+  stack: ['Electron', 'TypeScript', 'tree-sitter', 'llama.cpp'],
+  year: '2026',
+  client: 'In development',
+  color: '#2f5f98',
+  soft: '#dde7f3',
+  image: {
+    src: '/images/realearn-trace-1600.webp',
+    srcSet: '/images/realearn-trace-800.webp 800w, /images/realearn-trace-1600.webp 1600w',
+    alt: 'Design concept of the Realearn trace viewer: highlighted server code, a plain-language explanation of the step, and a flow strip from phone to server to database to a friend’s phone.',
+    mode: 'browser',
+  },
+  links: [],
+  note: 'Realearn is in the design stage. The image is a concept of the trace viewer, not a screenshot.',
+  caseStudy: {
+    lead: 'A tool for learning how real software works by following one action’s data from where it enters to where it ends up.',
+    problem:
+      'Tutorials explain toy apps, and real codebases are too big to read from the top. I wanted to pick a feature of a real system, like sending a message, and watch its data move and change shape step by step, with each step explained and honest about how it is known.',
+    built: [
+      'Spec, nine ADRs, and a 17-issue plan; parsing decides each trace step and the AI only explains it.',
+      'Python tooling for a JSONL dataset and GGUF model comparison; fine-tuning Qwen3.5 4B on Kaggle.',
+    ],
+    decisions: [
+      {
+        title: 'The analysis decides, the AI explains',
+        body: 'tree-sitter parsing, language servers, and fixed rules choose the steps of a trace. The model writes explanations and can only point at steps and lines that already exist, so it cannot invent architecture.',
+      },
+      {
+        title: 'Every step shows its evidence',
+        body: 'Each step is labeled Observed, Sourced, or Inferred, and code that is not the system’s real code is badged Reconstructed, so a learner can tell real architecture from a plausible guess.',
+      },
+      {
+        title: 'Local and free by default',
+        body: 'Everything runs on the user’s machine with a small local model through node-llama-cpp. Cloud keys are optional, and the app shows exactly what would be sent before anything leaves the machine.',
+      },
+    ],
+    improve: [
+      'Build the code engine first and check it against a hand-verified golden set of about 10 open-source repos.',
+      'Compare the fine-tuned model with the base model on the eval set before shipping it as the default.',
+      'Add the website and installed-program engines after the code engine is solid.',
+    ],
+    screens: [
+      {
+        src: '/images/realearn-trace-1600.webp',
+        srcSet: '/images/realearn-trace-800.webp 800w, /images/realearn-trace-1600.webp 1600w',
+        alt: 'Design concept of the Realearn trace viewer.',
+        caption:
+          'A design concept of the trace viewer, drawn from the spec. The app is not built yet.',
+      },
+    ],
+  },
+}
+
+export const projects: Project[] = [magilas, healthyaSat, iahbrary, realearn]
 export const featuredProjects: Project[] = [magilas, healthyaSat, iahbrary]
 export const hobbyProject: Project = skySprout
 export const allProjects: Project[] = [...projects, hobbyProject]

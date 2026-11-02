@@ -58,8 +58,15 @@ export function ResumePage() {
                 {project.hobby && <span className={styles.tag}>Hobby</span>}
               </div>
               <p className={styles.meta}>
-                {project.role} · {project.stack.join(', ')} · {project.year} ·{' '}
-                <a href={project.links[0].href}>{bareUrl(project.links[0].href)}</a>
+                {project.role} · {project.stack.join(', ')} · {project.year}
+                {project.links[0] ? (
+                  <>
+                    {' · '}
+                    <a href={project.links[0].href}>{bareUrl(project.links[0].href)}</a>
+                  </>
+                ) : (
+                  ' · In development'
+                )}
               </p>
               <ul>
                 {project.caseStudy.built.map((item) => (

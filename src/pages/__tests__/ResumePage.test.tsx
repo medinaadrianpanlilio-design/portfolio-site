@@ -49,10 +49,11 @@ describe('ResumePage', () => {
     const names = screen
       .getAllByRole('heading', { level: 3 })
       .map((heading) => heading.textContent ?? '')
-    expect(names.slice(0, 4).map((name) => name.split(' —')[0])).toEqual([
+    expect(names.slice(0, 5).map((name) => name.split(' —')[0])).toEqual([
       'Magilas Gym',
       'HealthyaSat',
       'Iahbrary',
+      'Realearn',
       'SkySprout',
     ])
 
@@ -74,9 +75,13 @@ describe('ResumePage', () => {
       for (const bullet of project.caseStudy.built) {
         expect(within(article).getByText(bullet)).toBeInTheDocument()
       }
-      expect(
-        within(article).getByRole('link', { name: bare(project.links[0].href) }),
-      ).toHaveAttribute('href', project.links[0].href)
+      if (project.links[0]) {
+        expect(
+          within(article).getByRole('link', { name: bare(project.links[0].href) }),
+        ).toHaveAttribute('href', project.links[0].href)
+      } else {
+        expect(article.textContent).toContain('In development')
+      }
     }
   })
 

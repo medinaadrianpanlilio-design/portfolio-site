@@ -38,6 +38,10 @@ export function fallbackReply(question: string) {
     return 'Adrian built the POS/admin side of Magilas Gym, a live gym management system. The work covers memberships, inventory, QR entry, income and expenses, and maintenance, with role-based access. The landing page is the public client site; the case study is at /projects/magilas.'
   }
 
+  if (/realearn|trace|tree-sitter|fine-tun|gguf|llama|qwen|desktop app|electron/.test(text)) {
+    return 'Realearn is a solo project in development: a local-only Windows desktop app (Electron, TypeScript, tree-sitter, node-llama-cpp) that follows one feature’s data through a real system, step by step, with evidence labels on every step. The analysis picks the steps and a local model only explains them. The spec and architecture are written and fine-tuning of Qwen3.5 4B has started; the app is not built yet. Case study: /projects/realearn.'
+  }
+
   if (/backend|server|api|endpoint/.test(text)) {
     return 'HealthyaSat is the clearest backend/API case study: claim extraction, classification, severity flagging, database insertion, and Docker. Magilas Gym also has server-side admin work around RBAC, inventory, QR entry, and financial records. See /projects/healthya-sat and /projects/magilas.'
   }
@@ -63,10 +67,10 @@ export function fallbackReply(question: string) {
   }
 
   if (/shipped|built|project|work|strong|best|focus/.test(text)) {
-    return 'The professional work is Magilas Gym (POS/admin), HealthyaSat (backend/API), and Iahbrary (solo mobile). SkySprout is a Roblox hobby with public source. Start at /projects; each case study covers the role, problem, built work, decisions, and improvements.'
+    return 'The professional work is Magilas Gym (POS/admin), HealthyaSat (backend/API), and Iahbrary (solo mobile). Realearn, a local-AI desktop app for learning how real software works, is in development. SkySprout is a Roblox hobby with public source. Start at /projects; each case study covers the role, problem, built work, decisions, and improvements.'
   }
 
-  return 'Ask me about Magilas Gym, HealthyaSat, Iahbrary, SkySprout, Adrian’s stack, or what he is looking for. You can also email medinaadrianpanlilio@gmail.com or connect on LinkedIn: https://www.linkedin.com/in/adrian-alexander-medina-022b8a433/.'
+  return 'Ask me about Magilas Gym, HealthyaSat, Iahbrary, Realearn, SkySprout, Adrian’s stack, or what he is looking for. You can also email medinaadrianpanlilio@gmail.com or connect on LinkedIn: https://www.linkedin.com/in/adrian-alexander-medina-022b8a433/.'
 }
 
 export function buildSystemPrompt() {
@@ -78,6 +82,7 @@ APPROVED FACTS
 - Magilas Gym (POS/admin developer): live gym management system covering memberships, inventory, QR entry, income/expenses, maintenance, and role-based access. The public landing page is the client site; the management system is behind the staff portal. Case study: /projects/magilas. Live: https://magilasgym.com/
 - HealthyaSat (backend/API developer): Taglish health-claim checker using claim extraction, DOH/WHO-informed classification, severity flagging, database insertion, and Docker. Case study: /projects/healthya-sat. Live: https://healthyasat.fit/
 - Iahbrary (solo developer): Expo/TypeScript/Supabase reading tracker with timed sessions, library, reviews, highlights, stats, email-only auth, owner-only RLS, and an offline queue. Public sanitized code: https://github.com/medinaadrianpanlilio-design/iahbrary. Case study: /projects/iahbrary.
+- Realearn (solo developer, in development): local-only Windows desktop app (Electron, TypeScript, React, tree-sitter, node-llama-cpp) that lets you pick a real system, choose a feature, and follow its data from input through processing to output, with every step explained and labeled Observed, Sourced, or Inferred. Parsing and call graphs decide the steps; the AI only explains them. Status: spec, nine architecture decision records, and a 17-issue plan are written, and fine-tuning of Qwen3.5 4B on Kaggle T4 GPUs has started. The app is not built yet and there is no public link. Case study: /projects/realearn.
 - SkySprout (solo hobby): Roblox growing simulator with server-authoritative growth, offline earnings, a 44-minute weather cycle, and persistence. Live: https://www.roblox.com/games/117628058304479. Public source: https://github.com/medinaadrianpanlilio-design/skysprout-public. Case study: /projects/skysprout.
 - Contact: medinaadrianpanlilio@gmail.com, https://www.linkedin.com/in/adrian-alexander-medina-022b8a433/, https://github.com/medinaadrianpanlilio-design.
 

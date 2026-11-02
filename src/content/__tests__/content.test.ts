@@ -18,12 +18,21 @@ const publicFile = (src: string) =>
   path.join(root, 'public', src.replace(/^\/+/, ''))
 
 describe('project content', () => {
-  it('leads with the three professional projects in the requested order', () => {
+  it('leads with the professional projects in the requested order', () => {
     expect(projects.map((project) => project.name)).toEqual([
       'Magilas Gym',
       'HealthyaSat',
       'Iahbrary',
+      'Realearn',
     ])
+  })
+
+  it('presents Realearn honestly as in development', () => {
+    const realearn = getProject('realearn')
+    expect(realearn?.links).toEqual([])
+    expect(realearn?.summary).toMatch(/not built yet/)
+    expect(realearn?.note).toMatch(/concept/i)
+    expect(realearn?.caseStudy.screens[0].caption).toMatch(/concept/i)
   })
 
   it('featured projects have a tagline and a three-step flow', () => {

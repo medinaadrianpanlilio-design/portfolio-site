@@ -30,6 +30,7 @@ describe('ProjectsPage', () => {
       '/projects/magilas',
       '/projects/healthya-sat',
       '/projects/iahbrary',
+      '/projects/realearn',
     ])
 
     expect(

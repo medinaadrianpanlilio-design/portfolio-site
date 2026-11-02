@@ -232,7 +232,9 @@
     max-width: 400px;
     height: auto;
     margin-inline: auto;
-    transform: rotate(2deg);
+    /* Tilt each card, not the whole column: a tilted tall column pushes the
+       lower cards off the left edge. */
+    transform: none;
   }
   .track {
     gap: 2.5rem;
@@ -240,6 +242,7 @@
   }
   .isoCard {
     opacity: 1 !important;
+    transform: rotate(2deg);
   }
   .mobileMeta {
     display: flex;

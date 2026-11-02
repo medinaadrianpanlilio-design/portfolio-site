@@ -105,7 +105,7 @@ export function ProjectsPage() {
           </div>
           <h1 className={`${styles.title} display`}>Projects</h1>
           <p className={styles.lead}>
-            Full-stack platforms, production APIs, and intelligent applications built for real use. Three projects,
+            Full-stack platforms, production APIs, and intelligent applications built for real use. Four projects,
             then a game I made for fun.
           </p>
         </div>

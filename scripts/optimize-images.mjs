@@ -12,6 +12,8 @@ const imageJobs = [
   { source: 'healthyaSat-extension.png', name: 'healthyaSat-extension', widths: [600, 843] },
   { source: 'iahbrary-home.png', name: 'iahbrary-home', widths: [360, 720] },
   { source: 'skysprout-garden.png', name: 'skysprout-garden', widths: [800, 1600] },
+  // Rendered from realearn-trace.html (a design concept; the app is not built yet).
+  { source: 'realearn-trace.png', name: 'realearn-trace', widths: [800, 1600] },
 ]
 
 await mkdir(outputDir, { recursive: true })

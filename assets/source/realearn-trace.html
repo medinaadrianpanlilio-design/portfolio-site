@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- Source for public/images/realearn-trace-*.webp. A concept of the Realearn
+     Trace viewer drawn from the README; the app itself is not built yet. -->
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1600px; height: 1000px; }
+  body {
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: #dde7f3;
+    display: grid; place-items: center;
+  }
+  .win {
+    width: 1480px; height: 900px; border-radius: 18px; overflow: hidden;
+    background: #fbfcfe; box-shadow: 0 40px 80px rgba(20, 40, 70, .22);
+    display: grid; grid-template-rows: 54px 1fr 230px;
+  }
+  .bar {
+    display: flex; align-items: center; gap: 18px; padding: 0 22px;
+    background: #12223a; color: #dfe8f5; font-size: 18px;
+  }
+  .bar b { font-weight: 650; letter-spacing: .02em; }
+  .crumb { color: #8fa6c4; }
+  .crumb span { color: #dfe8f5; }
+  .concept {
+    margin-left: auto; font-size: 14px; letter-spacing: .08em; text-transform: uppercase;
+    border: 1px solid #47618a; color: #a9bddb; padding: 5px 12px; border-radius: 999px;
+  }
+  .main { display: grid; grid-template-columns: 1.15fr 1fr; min-height: 0; }
+  .code {
+    background: #16273f; color: #b9c8de; padding: 26px 0;
+    font: 19px/1.75 "Cascadia Code", Consolas, monospace;
+  }
+  .file { padding: 0 28px 14px; color: #7f97b8; font-size: 15px; }
+  .ln { display: block; padding: 0 28px; white-space: pre; }
+  .ln i { display: inline-block; width: 40px; color: #4f6687; font-style: normal; }
+  .hl { background: rgba(108, 160, 232, .2); box-shadow: inset 4px 0 #6ca0e8; color: #eef4fc; }
+  .k { color: #8fb6f0; } .s { color: #a8d5a2; } .f { color: #f0c987; }
+  .explain { padding: 34px 40px; display: flex; flex-direction: column; gap: 18px; }
+  .hop { font-size: 15px; letter-spacing: .08em; text-transform: uppercase; color: #2f5f98; font-weight: 650; }
+  .explain h2 { font-size: 34px; line-height: 1.2; color: #12223a; font-weight: 650; }
+  .explain p { font-size: 20px; line-height: 1.55; color: #3c4b60; }
+  .shape { display: flex; align-items: center; gap: 12px; font: 17px Consolas, monospace; }
+  .shape span { padding: 8px 14px; border-radius: 8px; background: #e8eef7; color: #2a3e5c; }
+  .shape span.now { background: #2f5f98; color: #fff; }
+  .shape em { color: #8a9ab0; font-style: normal; }
+  .label { display: inline-flex; align-items: center; gap: 8px; font-size: 16px; color: #2f5f98; font-weight: 600; }
+  .label::before { content: ""; width: 26px; border-top: 3px solid #2f5f98; }
+  .strip {
+    border-top: 1px solid #dfe5ee; background: #f3f6fb;
+    display: flex; align-items: center; justify-content: center; gap: 0; padding: 0 60px;
+  }
+  .node { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 170px; }
+  .dot {
+    width: 92px; height: 92px; border-radius: 22px; background: #fff;
+    border: 3px solid #2f5f98; display: grid; place-items: center;
+  }
+  .dot svg { width: 46px; height: 46px; stroke: #2f5f98; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .node.here .dot { background: #2f5f98; box-shadow: 0 0 0 10px rgba(47, 95, 152, .16); }
+  .node.here .dot svg { stroke: #fff; }
+  .node.guess .dot { border-style: dashed; border-color: #8aa3c4; }
+  .node.guess .dot svg { stroke: #8aa3c4; }
+  .node b { font-size: 18px; color: #12223a; font-weight: 600; }
+  .node small { font-size: 14px; color: #6b7c93; }
+  .edge { flex: 1; height: 0; border-top: 3px solid #2f5f98; margin-bottom: 52px; position: relative; }
+  .edge.guess { border-top: 3px dashed #8aa3c4; }
+  .packet {
+    position: absolute; left: 30%; top: -10px; width: 17px; height: 17px; border-radius: 50%;
+    background: #e5894a; box-shadow: 0 0 0 6px rgba(229, 137, 74, .25);
+  }
+</style>
+</head>
+<body>
+  <div class="win">
+    <div class="bar">
+      <b>Realearn</b>
+      <span class="crumb">chat-app &rsaquo; Messaging &rsaquo; <span>Send a message</span></span>
+      <span class="concept">Design concept</span>
+    </div>
+    <div class="main">
+      <div class="code">
+        <div class="file">server/routes/messages.ts</div>
+        <span class="ln"><i>14</i><span class="k">router</span>.<span class="f">post</span>(<span class="s">'/messages'</span>, <span class="k">async</span> (req, res) =&gt; {</span>
+        <span class="ln hl"><i>15</i>  <span class="k">const</span> body = MessageSchema.<span class="f">parse</span>(req.body)</span>
+        <span class="ln hl"><i>16</i>  <span class="k">const</span> row = <span class="k">await</span> db.messages.<span class="f">insert</span>({</span>
+        <span class="ln hl"><i>17</i>    chatId: body.chatId, text: body.text,</span>
+        <span class="ln hl"><i>18</i>    senderId: req.user.id,</span>
+        <span class="ln hl"><i>19</i>  })</span>
+        <span class="ln"><i>20</i>  <span class="k">await</span> queue.<span class="f">publish</span>(<span class="s">'message.created'</span>, row)</span>
+        <span class="ln"><i>21</i>  res.<span class="f">status</span>(<span class="s">201</span>).<span class="f">json</span>(row)</span>
+        <span class="ln"><i>22</i>})</span>
+      </div>
+      <div class="explain">
+        <span class="hop">Hop 3 of 6 · Transform</span>
+        <h2>The request becomes a saved database row</h2>
+        <p>The server checks the message against a schema, then stores it with the sender's id taken from the session, never from the request body.</p>
+        <div class="shape">
+          <span>request body</span><em>&rarr;</em><span>validated object</span><em>&rarr;</em><span class="now">database row</span>
+        </div>
+        <span class="label">Observed in the code</span>
+      </div>
+    </div>
+    <div class="strip">
+      <div class="node">
+        <div class="dot"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></div>
+        <b>Phone</b><small>form fields</small>
+      </div>
+      <div class="edge"></div>
+      <div class="node">
+        <div class="dot"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="7" rx="1.5"/><rect x="3" y="13" width="18" height="7" rx="1.5"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></div>
+        <b>Server</b><small>request body</small>
+      </div>
+      <div class="edge"><span class="packet"></span></div>
+      <div class="node here">
+        <div class="dot"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></div>
+        <b>Database</b><small>row</small>
+      </div>
+      <div class="edge"></div>
+      <div class="node">
+        <div class="dot"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg></div>
+        <b>Queue</b><small>event</small>
+      </div>
+      <div class="edge guess"></div>
+      <div class="node guess">
+        <div class="dot"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></div>
+        <b>Friend's phone</b><small>push · inferred</small>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
